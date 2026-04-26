@@ -143,6 +143,92 @@ http.createServer((req, res) => {
     try { res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'}); res.end(fs.readFileSync(path.join(PROJETOS_DIR,nome,'index.html'),'utf8')); }
     catch { res.end('<h1>Projeto não encontrado</h1>'); }
 
+
+  } else if (pathname === '/cmd-stream') {
+    let body = '';
+    req.on('data', d => body += d);
+    req.on('end', () => {
+      try {
+        const { cmd, projeto, sessionId } = JSON.parse(body);
+        const partes = cmd.trim().split(/\s+/);
+        const primeiraPalavra = partes[0];
+        if (!CMDS_PERMITIDOS.includes(primeiraPalavra)) {
+          res.writeHead(200, {'Content-Type':'text/event-stream','Cache-Control':'no-cache','Connection':'keep-alive'});
+          res.write('data: ' + JSON.stringify({type:'error', text:"Comando '"+primeiraPalavra+"' nao permitido"}) + '\n\n');
+          res.write('data: ' + JSON.stringify({type:'end', code:1}) + '\n\n');
+          res.end();
+          return;
+        }
+        res.writeHead(200, {'Content-Type':'text/event-stream','Cache-Control':'no-cache','Connection':'keep-alive','X-Accel-Buffering':'no'});
+        const cwd = projeto ? path.join(PROJETOS_DIR, projeto) : '/app';
+        const proc = spawn('bash', ['-c', cmd], { cwd, env: process.env });
+        sessions.set(sessionId, { proc, status: 'running' });
+
+        proc.stdout.on('data', chunk => {
+          chunk.toString().split('\n').forEach(line => {
+            if (line.length) res.write('data: ' + JSON.stringify({type:'stdout', text:line}) + '\n\n');
+          });
+        });
+        proc.stderr.on('data', chunk => {
+          chunk.toString().split('\n').forEach(line => {
+            if (line.length) res.write('data: ' + JSON.stringify({type:'stderr', text:line}) + '\n\n');
+          });
+        });
+        proc.on('close', code => {
+          res.write('data: ' + JSON.stringify({type:'end', code}) + '\n\n');
+          res.end();
+          sessions.delete(sessionId);
+        });
+        proc.on('error', err => {
+          res.write('data: ' + JSON.stringify({type:'error', text:err.message}) + '\n\n');
+          res.write('data: ' + JSON.stringify({type:'end', code:1}) + '\n\n');
+          res.end();
+          sessions.delete(sessionId);
+        });
+
+        req.on('close', () => {
+          if (sessions.has(sessionId)) {
+            try { proc.kill('SIGTERM'); } catch(e) {}
+            sessions.delete(sessionId);
+          }
+        });
+      } catch(e) {
+        res.writeHead(200, {'Content-Type':'text/event-stream'});
+        res.write('data: ' + JSON.stringify({type:'error', text:e.message}) + '\n\n');
+        res.end();
+      }
+    });
+
+  } else if (pathname === '/cmd-stdin') {
+    let body = '';
+    req.on('data', d => body += d);
+    req.on('end', () => {
+      try {
+        const { sessionId, input } = JSON.parse(body);
+        const sess = sessions.get(sessionId);
+        if (!sess || !sess.proc) { res.end(JSON.stringify({ok:false,erro:'sessao nao encontrada'})); return; }
+        sess.proc.stdin.write(input + '\n');
+        res.writeHead(200, {'Content-Type':'application/json'});
+        res.end(JSON.stringify({ok:true}));
+      } catch(e) { res.end(JSON.stringify({ok:false,erro:e.message})); }
+    });
+
+  } else if (pathname === '/cmd-kill') {
+    let body = '';
+    req.on('data', d => body += d);
+    req.on('end', () => {
+      try {
+        const { sessionId } = JSON.parse(body);
+        const sess = sessions.get(sessionId);
+        if (sess && sess.proc) {
+          try { sess.proc.kill('SIGTERM'); } catch(e) {}
+          sessions.delete(sessionId);
+        }
+        res.writeHead(200, {'Content-Type':'application/json'});
+        res.end(JSON.stringify({ok:true}));
+      } catch(e) { res.end(JSON.stringify({ok:false,erro:e.message})); }
+    });
+
   } else {
     res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});
     res.end(fs.readFileSync('/app/painel.html'));
