@@ -284,3 +284,27 @@ fetch('/projetos/listar').then(r => r.json()).then(lista => {
 </script>
 </body>
 </html>
+<script>
+document.getElementById('editor').addEventListener('input', function() {
+  clearTimeout(window._saveTimer);
+  window._saveTimer = setTimeout(salvarArquivo, 1500);
+});
+
+function salvarArquivo() {
+  const editor = document.getElementById('editor');
+  const arquivo = document.getElementById('statusFile').textContent;
+  if (!arquivo || arquivo === 'painel') return;
+  
+  const url = abaAtiva === '__painel__' ? null : '/projetos/salvar';
+  if (!url) return;
+
+  fetch(url, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ projeto: abaAtiva, arquivo, conteudo: editor.value })
+  }).then(r => r.json()).then(data => {
+    if (data.ok) addLog('✓ ' + arquivo + ' salvo automaticamente', 't-ok');
+    else addLog('✗ Erro ao salvar', 't-err');
+  }).catch(e => addLog('✗ ' + e.message, 't-err'));
+}
+</script>
