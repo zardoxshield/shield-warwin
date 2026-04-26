@@ -308,3 +308,58 @@ function salvarArquivo() {
   }).catch(e => addLog('✗ ' + e.message, 't-err'));
 }
 </script>
+<style>
+.terminal-input-area{display:flex;gap:6px;padding:6px 16px;background:#0d0d0d;border-top:1px solid #1a1a1a;flex-shrink:0}
+.terminal-input{flex:1;background:transparent;border:none;color:#5DCAA5;font-family:'Courier New',monospace;font-size:12px;outline:none}
+.run-btn{padding:4px 12px;background:#1D9E75;border:none;border-radius:4px;color:#fff;font-size:11px;cursor:pointer;font-family:sans-serif;white-space:nowrap}
+.run-btn:hover{background:#0F6E56}
+</style>
+<script>
+document.querySelector('.terminal').insertAdjacentHTML('afterend', `
+<div class="terminal-input-area">
+  <span style="color:#555;font-size:12px;font-family:Courier New,monospace">$</span>
+  <input class="terminal-input" id="termInput" placeholder="digite um comando ou clique ▶ Executar..." onkeydown="if(event.key==='Enter')executarComando()"/>
+  <button class="run-btn" onclick="executarArquivoAtual()">▶ Executar</button>
+</div>
+`);
+
+function executarArquivoAtual() {
+  const arquivo = document.getElementById('statusFile').textContent;
+  if (!arquivo || arquivo === 'painel' || abaAtiva === '__painel__') {
+    addLog('✗ Selecione um projeto e arquivo para executar', 't-err');
+    return;
+  }
+  addLog('$ Executando ' + arquivo + '...', 't-muted');
+  fetch('/projetos/executar', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ projeto: abaAtiva, arquivo })
+  }).then(r => r.json()).then(data => {
+    data.saida.split('\n').forEach(linha => {
+      if (linha.trim()) addLog(linha, data.ok ? 't-ok' : 't-err');
+    });
+  }).catch(e => addLog('✗ ' + e.message, 't-err'));
+}
+
+function executarComando() {
+  const input = document.getElementById('termInput');
+  const cmd = input.value.trim();
+  if (!cmd) return;
+  input.value = '';
+  addLog('$ ' + cmd, 't-cmd');
+
+  const comandos = {
+    'ls projetos': () => fetch('/projetos/listar').then(r=>r.json()).then(d=>d.forEach(p=>addLog('📁 '+p.nome+' ('+p.tipo+')', 't-ok'))),
+    'help': () => {
+      ['Comandos disponíveis:','  ls projetos — lista projetos','  clear — limpa terminal','  ▶ Executar — roda o arquivo aberto'].forEach(l=>addLog(l,'t-muted'));
+    },
+    'clear': () => { document.getElementById('terminal').innerHTML = ''; }
+  };
+
+  if (comandos[cmd]) {
+    comandos[cmd]();
+  } else {
+    addLog('✗ Comando não reconhecido. Digite "help"', 't-err');
+  }
+}
+</script>
