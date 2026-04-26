@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shield Warwin | Advocacia Tributária</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#c9a84c;--dark:#0a0a0a;--gray:#1a1a1a;--light:#f5f5f0}
+body{font-family:'Montserrat',sans-serif;background:var(--dark);color:var(--light)}
+nav{position:fixed;top:0;width:100%;padding:2rem 4rem;display:flex;justify-content:space-between;align-items:center;z-index:100;background:rgba(10,10,10,0.95);border-bottom:1px solid rgba(201,168,76,0.2)}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold);letter-spacing:3px}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:var(--light);text-decoration:none;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;opacity:0.7;transition:opacity 0.3s}
+.nav-links a:hover{opacity:1;color:var(--gold)}
+.hero{height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;background:linear-gradient(rgba(10,10,10,0.85),rgba(10,10,10,0.95)),url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1920') center/cover}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:300;letter-spacing:8px;margin-bottom:1rem;color:var(--light)}
+.hero h1 span{color:var(--gold)}
+.hero p{font-size:0.8rem;letter-spacing:4px;text-transform:uppercase;opacity:0.6;margin-bottom:3rem}
+.btn{border:1px solid var(--gold);color:var(--gold);padding:1rem 3rem;text-decoration:none;font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;transition:all 0.3s}
+.btn:hover{background:var(--gold);color:var(--dark)}
+.divider{width:60px;height:1px;background:var(--gold);margin:0 auto 2rem}
+section{padding:8rem 4rem}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;letter-spacing:4px;text-align:center;margin-bottom:1rem}
+.sobre{background:var(--gray)}
+.sobre-content{max-width:800px;margin:3rem auto;text-align:center;line-height:2;opacity:0.8;font-weight:300}
+.areas{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2px;margin-top:4rem}
+.area-card{background:var(--gray);padding:3rem;text-align:center;transition:all 0.3s;border:1px solid transparent}
+.area-card:hover{border-color:var(--gold)}
+.area-card h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--gold);margin-bottom:1rem;letter-spacing:2px}
+.area-card p{font-size:0.85rem;line-height:1.8;opacity:0.7;font-weight:300}
+.contato{background:var(--gray);text-align:center}
+.contato p{opacity:0.7;margin:1rem 0 3rem;font-weight:300;letter-spacing:1px}
+footer{padding:2rem 4rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(201,168,76,0.2);font-size:0.75rem;opacity:0.5}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">SHIELD WARWIN</div>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#areas">Áreas</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+</nav>
+<section class="hero">
+  <div>
+    <h1>SHIELD <span>WARWIN</span></h1>
+    <p>Advocacia Tributária de Excelência</p>
+    <a href="#contato" class="btn">Fale Conosco</a>
+  </div>
+</section>
+<section class="sobre" id="sobre">
+  <div class="section-title">Sobre o Escritório</div>
+  <div class="divider"></div>
+  <p class="sobre-content">O Shield Warwin é um escritório de advocacia especializado em Direito Tributário, reconhecido pela excelência técnica e pelo compromisso com resultados. Nossa equipe atua com precisão e ética na defesa dos interesses de nossos clientes perante os órgãos administrativos e judiciais.</p>
+</section>
+<section id="areas">
+  <div class="section-title">Áreas de Atuação</div>
+  <div class="divider"></div>
+  <div class="areas">
+    <div class="area-card">
+      <h3>Planejamento Tributário</h3>
+      <p>Estruturação fiscal estratégica para empresas e pessoas físicas, reduzindo a carga tributária dentro dos limites legais.</p>
+    </div>
+    <div class="area-card">
+      <h3>Contencioso Tributário</h3>
+      <p>Defesa em processos administrativos e judiciais, com atuação em todas as instâncias do sistema tributário brasileiro.</p>
+    </div>
+    <div class="area-card">
+      <h3>Consultoria Fiscal</h3>
+      <p>Assessoria especializada em tributos federais, estaduais e municipais para empresas de todos os portes.</p>
+    </div>
+  </div>
+</section>
+<section class="contato" id="contato">
+  <div class="section-title">Entre em Contato</div>
+  <div class="divider"></div>
+  <p>Agende uma consulta com nossa equipe</p>
+  <a href="mailto:contato@shieldwarwin.com.br" class="btn">contato@shieldwarwin.com.br</a>
+</section>
+<footer>
+  <span>© 2026 Shield Warwin Advocacia</span>
+  <span>Direito Tributário</span>
+</footer>
+</body>
+</html>
