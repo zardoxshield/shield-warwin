@@ -1,13 +1,3 @@
-cat > ~/workspace/shield-warwin/Dockerfile << 'EOF'
-FROM node:18-alpine
-RUN apk add --no-cache git
-WORKDIR /app
-COPY . .
-EXPOSE 9999
-CMD ["node", "servidor.js"]
-EOF
-
-cat > ~/workspace/shield-warwin/servidor.js << 'EOF'
 const http = require('http');
 const fs = require('fs');
 const https = require('https');
@@ -34,9 +24,3 @@ http.createServer((req, res) => {
     res.end(fs.readFileSync('/app/painel.html'));
   }
 }).listen(9999, () => console.log('Painel rodando na porta 9999'));
-EOF
-
-cd ~/workspace/shield-warwin
-git add .
-git commit -m "fix servidor.js e Dockerfile"
-git push
