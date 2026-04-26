@@ -7,8 +7,17 @@ const path = require('path');
 // === AUTH_SISTEMA_V1 ===
 const crypto = require('crypto');
 const AUTH_FILE = path.join(__dirname, '.auth.json');
-function carregarAuth(){ try { return JSON.parse(fs.readFileSync(AUTH_FILE,'utf8')); } catch(e) { return {usuario:'admin',senhaHash:'',sessoes:{}}; } }
-function salvarAuth(a){ fs.writeFileSync(AUTH_FILE, JSON.stringify(a,null,2)); }
+function carregarAuth(){
+  return {
+    usuario: process.env.USUARIO_AUTH || 'admin',
+    senhaHash: process.env.SENHA_HASH_AUTH || '',
+    sessoes: {}
+  };
+} catch(e) { return {usuario:'admin',senhaHash:'',sessoes:{}}; } }
+function salvarAuth(a){
+  // sessoes sao salvas apenas em memoria (reset ao redeploy)
+  // para persistencia, configurar volumes no Docker
+}
 function hashSenha(s){ return crypto.createHash('sha256').update(s).digest('hex'); }
 function novoToken(){ return crypto.randomBytes(32).toString('hex'); }
 function pegarCookie(req, nome){
