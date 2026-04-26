@@ -11,16 +11,12 @@ body{font-family:'Courier New',monospace;background:#0f0f0f;color:#e0e0e0;height
 .logo{font-size:15px;font-weight:bold;color:#5DCAA5}
 .topbar-btns{display:flex;gap:8px}
 .btn-novo{padding:6px 14px;background:#1D9E75;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:12px;font-weight:bold}
-.btn-novo:hover{background:#0F6E56}
 .btn-pub{padding:6px 14px;background:#378ADD;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:12px;font-weight:bold}
-.btn-pub:hover{background:#185FA5}
 .btn-pub:disabled{opacity:0.5;cursor:not-allowed}
 .abas{display:flex;align-items:center;background:#141414;border-bottom:1px solid #2a2a2a;overflow-x:auto;flex-shrink:0}
 .aba{display:flex;align-items:center;gap:6px;padding:7px 14px;font-size:12px;color:#666;cursor:pointer;border-right:1px solid #2a2a2a;white-space:nowrap;font-family:sans-serif}
 .aba:hover{color:#ccc;background:#1a1a1a}
-.aba.active{color:#e0e0e0;background:#1a1a1a;border-top:1px solid #5DCAA5}
-.aba-close{color:#555;font-size:14px;line-height:1;padding:0 2px}
-.aba-close:hover{color:#F09595}
+.aba.active{color:#e0e0e0;background:#1a1a1a;border-top:2px solid #5DCAA5}
 .aba-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .main{display:flex;flex:1;min-height:0}
 .sidebar{width:180px;background:#141414;border-right:1px solid #2a2a2a;padding:10px 0;overflow-y:auto;flex-shrink:0}
@@ -30,8 +26,12 @@ body{font-family:'Courier New',monospace;background:#0f0f0f;color:#e0e0e0;height
 .fdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .center{flex:1;display:flex;flex-direction:column;min-width:0}
 .editor{flex:1;padding:16px;background:#1a1a1a;font-size:13px;line-height:1.7;overflow-y:auto;outline:none;color:#c9d1d9;min-height:0;resize:none;border:none;font-family:'Courier New',monospace}
-.terminal{height:130px;background:#0d0d0d;padding:10px 16px;font-size:12px;color:#5DCAA5;overflow-y:auto;border-top:1px solid #2a2a2a;flex-shrink:0}
+.terminal{height:120px;background:#0d0d0d;padding:10px 16px;font-size:12px;color:#5DCAA5;overflow-y:auto;border-top:1px solid #2a2a2a;flex-shrink:0}
 .t-err{color:#F09595}.t-ok{color:#5DCAA5}.t-muted{color:#555}.t-cmd{color:#EF9F27}
+.term-input-area{display:flex;gap:6px;padding:6px 16px;background:#0d0d0d;border-top:1px solid #1a1a1a;flex-shrink:0;align-items:center}
+.term-prompt{color:#555;font-size:12px}
+.term-input{flex:1;background:transparent;border:none;color:#5DCAA5;font-family:'Courier New',monospace;font-size:12px;outline:none}
+.run-btn{padding:4px 12px;background:#1D9E75;border:none;border-radius:4px;color:#fff;font-size:11px;cursor:pointer;font-family:sans-serif}
 .ai-panel{width:220px;background:#141414;border-left:1px solid #2a2a2a;display:flex;flex-direction:column;flex-shrink:0}
 .ai-header{font-size:10px;color:#555;padding:8px 12px;border-bottom:1px solid #2a2a2a;font-family:sans-serif;text-transform:uppercase;letter-spacing:0.08em}
 .suggestions{flex:1;overflow-y:auto;padding:6px;display:flex;flex-direction:column;gap:4px}
@@ -40,7 +40,7 @@ body{font-family:'Courier New',monospace;background:#0f0f0f;color:#e0e0e0;height
 .sug-cat{font-size:9px;color:#5DCAA5;display:block;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.06em}
 .statusbar{display:flex;align-items:center;gap:16px;padding:3px 16px;background:#1a1a1a;border-top:1px solid #2a2a2a;font-size:10px;color:#555;font-family:sans-serif;flex-shrink:0}
 .sdot{width:6px;height:6px;border-radius:50%;background:#1D9E75;display:inline-block;margin-right:4px}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:100;align-items:center;justify-content:center}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100;align-items:center;justify-content:center}
 .modal.open{display:flex}
 .modal-box{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:24px;width:360px}
 .modal-title{font-family:sans-serif;font-size:15px;font-weight:bold;color:#5DCAA5;margin-bottom:16px}
@@ -53,8 +53,6 @@ body{font-family:'Courier New',monospace;background:#0f0f0f;color:#e0e0e0;height
 .modal-btns{display:flex;gap:8px;justify-content:flex-end}
 .modal-cancel{padding:7px 14px;background:transparent;border:1px solid #2a2a2a;border-radius:5px;color:#666;font-size:12px;cursor:pointer;font-family:sans-serif}
 .modal-ok{padding:7px 14px;background:#1D9E75;border:none;border-radius:5px;color:#fff;font-size:12px;cursor:pointer;font-family:sans-serif;font-weight:bold}
-.projeto-vazio{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:#333;font-family:sans-serif;gap:8px}
-.projeto-vazio span{font-size:2rem}
 </style>
 </head>
 <body>
@@ -65,23 +63,19 @@ body{font-family:'Courier New',monospace;background:#0f0f0f;color:#e0e0e0;height
     <button class="btn-pub" id="publishBtn" onclick="publicar()">⬆ Publicar</button>
   </div>
 </div>
-
 <div class="abas" id="abas">
   <div class="aba active" data-projeto="__painel__" onclick="selectAba(this,'__painel__')">
-    <div class="aba-dot" style="background:#5DCAA5"></div>
-    Painel
+    <div class="aba-dot" style="background:#5DCAA5"></div>Painel
   </div>
 </div>
-
 <div class="main">
   <div class="sidebar" id="sidebar">
     <div class="sidebar-label">Arquivos</div>
-    <div class="file-item active" onclick="selectFile(this,'index.html')"><div class="fdot" style="background:#E24B4A"></div>index.html</div>
+    <div class="file-item" onclick="selectFile(this,'index.html')"><div class="fdot" style="background:#E24B4A"></div>index.html</div>
     <div class="file-item" onclick="selectFile(this,'painel.html')"><div class="fdot" style="background:#E24B4A"></div>painel.html</div>
     <div class="file-item" onclick="selectFile(this,'servidor.js')"><div class="fdot" style="background:#EF9F27"></div>servidor.js</div>
     <div class="file-item" onclick="selectFile(this,'Dockerfile')"><div class="fdot" style="background:#378ADD"></div>Dockerfile</div>
   </div>
-
   <div class="center">
     <textarea class="editor" id="editor" spellcheck="false">// Selecione um arquivo à esquerda</textarea>
     <div class="terminal" id="terminal">
@@ -89,11 +83,15 @@ body{font-family:'Courier New',monospace;background:#0f0f0f;color:#e0e0e0;height
       <div class="t-ok">✓ Servidor online · porta 9999</div>
       <div class="t-muted">$ aguardando...</div>
     </div>
+    <div class="term-input-area">
+      <span class="term-prompt">$</span>
+      <input class="term-input" id="termInput" placeholder="npm install express / python3 main.py / ls ..." onkeydown="if(event.key==='Enter')executarComando()"/>
+      <button class="run-btn" onclick="executarArquivoAtual()">▶ Executar</button>
+    </div>
   </div>
-
   <div class="ai-panel">
     <div class="ai-header">✦ Próximos passos</div>
-    <div class="suggestions" id="suggestions">
+    <div class="suggestions">
       <button class="sug" onclick="dica('auth')"><span class="sug-cat">Segurança</span>Login de usuário</button>
       <button class="sug" onclick="dica('api')"><span class="sug-cat">Backend</span>Criar API REST</button>
       <button class="sug" onclick="dica('db')"><span class="sug-cat">Banco de dados</span>Conectar SQLite</button>
@@ -106,18 +104,16 @@ body{font-family:'Courier New',monospace;background:#0f0f0f;color:#e0e0e0;height
     </div>
   </div>
 </div>
-
 <div class="statusbar">
   <span><span class="sdot"></span>Online</span>
   <span id="statusFile">painel</span>
   <span>Node.js v18 · Docker · Coolify</span>
 </div>
-
 <div class="modal" id="modal">
   <div class="modal-box">
     <div class="modal-title">+ Novo Projeto</div>
     <div class="modal-label">Nome do projeto</div>
-    <input class="modal-input" id="nomeProj" placeholder="meu-site" />
+    <input class="modal-input" id="nomeProj" placeholder="meu-site"/>
     <div class="modal-label">Tipo</div>
     <div class="tipos">
       <button class="tipo-btn sel" data-tipo="site" onclick="selTipo(this)">🌐 Site</button>
@@ -133,233 +129,161 @@ body{font-family:'Courier New',monospace;background:#0f0f0f;color:#e0e0e0;height
     </div>
   </div>
 </div>
-
 <script>
-let abaAtiva = '__painel__';
-let tipoSel = 'site';
-let projetos = {};
+let abaAtiva='__painel__',tipoSel='site',projetos={};
 
-const dicas = {
-  auth:['── Login de usuário ──','$ npm install express-session bcrypt','// Rota POST /login no servidor.js','✓ Senha criptografada com bcrypt','✓ Sessão mantida com express-session'],
-  api:['── API REST ──','// GET /api/items → lista itens','// POST /api/items → cria item','// DELETE /api/items/:id → remove','✓ Teste: curl http://localhost:9999/api/items'],
-  db:['── Banco SQLite ──','$ npm install better-sqlite3','const db = new Database("/app/dados.db");','db.exec("CREATE TABLE IF NOT EXISTS itens (id INTEGER PRIMARY KEY, nome TEXT)");','✓ Dados persistem entre deploys'],
-  css:['── CSS Moderno ──','// Adicione no <head>:','<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">','body { font-family: Inter, sans-serif; max-width: 900px; margin: 0 auto; }','✓ Layout responsivo pronto'],
-  ws:['── WebSocket ──','$ npm install ws','const wss = new WebSocket.Server({ port: 8080 });','wss.on("connection", ws => { ws.on("message", msg => wss.clients.forEach(c => c.send(msg))); });','✓ Chat em tempo real!'],
-  env:['── Variáveis de Ambiente ──','// No Coolify: Configuration > Environment Variables','// Adicione: MINHA_CHAVE=valor123','const chave = process.env.MINHA_CHAVE;','✓ Nunca coloque senhas no código!'],
-  upload:['── Upload de Arquivos ──','$ npm install multer','const upload = multer({ dest: "/app/uploads/" });','app.post("/upload", upload.single("arquivo"), (req,res) => { res.json({ ok: true }); });','✓ Arquivos salvos em /app/uploads/'],
-  log:['── Logs ──','fs.appendFileSync("/app/servidor.log", new Date().toISOString() + " " + msg + "\\n");','// Veja logs no Coolify > Logs','✓ Histórico salvo em servidor.log'],
-  dominio:['── Publicar com Domínio ──','1. Compre um domínio (Namecheap, GoDaddy, etc)','2. Aponte o DNS para o IP: 177.7.34.15','3. No Coolify: Configuration > Domains','4. Adicione o domínio e clique Save','✓ HTTPS automático pelo Coolify!']
+const dicas={
+  auth:['── Login de usuário ──','$ npm install express-session bcrypt','✓ Senha criptografada com bcrypt','✓ Sessão mantida com express-session'],
+  api:['── API REST ──','// GET /api/items → lista','// POST /api/items → cria','✓ Teste: curl http://localhost:9999/api/items'],
+  db:['── Banco SQLite ──','$ npm install better-sqlite3','const db = new Database("/app/dados.db");','✓ Dados persistem entre deploys'],
+  css:['── CSS Moderno ──','<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">','body { font-family: Inter, sans-serif; }','✓ Layout responsivo pronto'],
+  ws:['── WebSocket ──','$ npm install ws','const wss = new WebSocket.Server({ port: 8080 });','✓ Chat em tempo real!'],
+  env:['── Variáveis de Ambiente ──','// Coolify: Configuration > Environment Variables','const chave = process.env.MINHA_CHAVE;','✓ Nunca coloque senhas no código!'],
+  upload:['── Upload de Arquivos ──','$ npm install multer','const upload = multer({ dest: "/app/uploads/" });','✓ Arquivos salvos em /app/uploads/'],
+  log:['── Logs ──','fs.appendFileSync("/app/servidor.log", msg);','✓ Veja logs no Coolify > Logs'],
+  dominio:['── Publicar com Domínio ──','1. Compre um domínio','2. DNS → IP: 177.7.34.15','3. Coolify: Configuration > Domains','✓ HTTPS automático!']
 };
 
-function dica(key) {
-  dicas[key].forEach(l => addLog(l, l.startsWith('──') ? 't-muted' : l.startsWith('$') || l.startsWith('//') || l.startsWith('const') || /^\d/.test(l) ? 't-cmd' : l.startsWith('✓') ? 't-ok' : 't-ok'));
-  addLog('─────────────────', 't-muted');
+function dica(key){
+  dicas[key].forEach(l=>addLog(l,l.startsWith('──')?'t-muted':l.startsWith('$')||l.startsWith('//')||/^\d/.test(l)?'t-cmd':'t-ok'));
+  addLog('─────────────','t-muted');
 }
 
-function addLog(msg, cls='t-muted') {
-  const t = document.getElementById('terminal');
-  const d = document.createElement('div');
-  d.className = cls; d.textContent = msg;
-  t.appendChild(d); t.scrollTop = t.scrollHeight;
+function addLog(msg,cls='t-muted'){
+  const t=document.getElementById('terminal');
+  const d=document.createElement('div');
+  d.className=cls;d.textContent=msg;
+  t.appendChild(d);t.scrollTop=t.scrollHeight;
 }
 
-function selectFile(el, nome) {
-  document.querySelectorAll('.file-item').forEach(e => e.classList.remove('active'));
+function selectFile(el,nome){
+  document.querySelectorAll('.file-item').forEach(e=>e.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById('statusFile').textContent = nome;
-  addLog('$ carregando ' + nome, 't-muted');
-  const url = abaAtiva === '__painel__' ? '/arquivo?nome=' + nome : '/projetos/arquivo?projeto=' + abaAtiva + '&arquivo=' + nome;
-  fetch(url).then(r => r.text()).then(txt => {
-    document.getElementById('editor').value = txt;
-    addLog('✓ ' + nome + ' carregado', 't-ok');
-  }).catch(() => addLog('✗ Erro ao carregar ' + nome, 't-err'));
+  document.getElementById('statusFile').textContent=nome;
+  addLog('$ cat '+nome,'t-muted');
+  const url=abaAtiva==='__painel__'?'/arquivo?nome='+nome:'/projetos/arquivo?projeto='+abaAtiva+'&arquivo='+nome;
+  fetch(url).then(r=>r.text()).then(txt=>{
+    document.getElementById('editor').value=txt;
+    addLog('✓ '+nome+' carregado','t-ok');
+  }).catch(()=>addLog('✗ Erro ao carregar '+nome,'t-err'));
 }
 
-function selectAba(el, projeto) {
-  document.querySelectorAll('.aba').forEach(e => e.classList.remove('active'));
+function selectAba(el,projeto){
+  document.querySelectorAll('.aba').forEach(e=>e.classList.remove('active'));
   el.classList.add('active');
-  abaAtiva = projeto;
-  document.getElementById('statusFile').textContent = projeto;
+  abaAtiva=projeto;
+  document.getElementById('statusFile').textContent=projeto;
   atualizarSidebar(projeto);
 }
 
-function atualizarSidebar(projeto) {
-  const sb = document.getElementById('sidebar');
-  if (projeto === '__painel__') {
-    sb.innerHTML = '<div class="sidebar-label">Arquivos</div>' +
-      ['index.html','painel.html','servidor.js','Dockerfile'].map(f =>
+function atualizarSidebar(projeto){
+  const sb=document.getElementById('sidebar');
+  if(projeto==='__painel__'){
+    sb.innerHTML='<div class="sidebar-label">Arquivos</div>'+
+      ['index.html','painel.html','servidor.js','Dockerfile'].map(f=>
         `<div class="file-item" onclick="selectFile(this,'${f}')"><div class="fdot" style="background:${f.endsWith('.html')?'#E24B4A':f.endsWith('.js')?'#EF9F27':'#378ADD'}"></div>${f}</div>`
       ).join('');
   } else {
-    const p = projetos[projeto];
-    if (!p) return;
-    const tipos = { site:['index.html','README.md'], api:['index.js','README.md'], python:['main.py','README.md'], cpp:['main.cpp','README.md'], java:['Main.java','README.md'], landing:['index.html','README.md'] };
-    const arquivos = tipos[p.tipo] || ['index.html'];
-    sb.innerHTML = `<div class="sidebar-label">${projeto}</div>` +
-      arquivos.map(f =>
-        `<div class="file-item" onclick="selectFile(this,'${f}')"><div class="fdot" style="background:${f.endsWith('.html')?'#E24B4A':f.endsWith('.js')||f.endsWith('.py')?'#EF9F27':f.endsWith('.cpp')||f.endsWith('.java')?'#378ADD':'#5DCAA5'}"></div>${f}</div>`
-      ).join('') +
-      `<div style="padding:8px 12px;margin-top:8px"><button onclick="verProjeto('${projeto}')" style="width:100%;padding:5px;background:#1D9E75;border:none;border-radius:4px;color:#fff;font-size:11px;cursor:pointer;font-family:sans-serif">🌐 Visualizar</button></div>`;
+    const p=projetos[projeto];
+    if(!p)return;
+    const tipos={site:['index.html'],api:['index.js','README.md'],python:['main.py','README.md'],cpp:['main.cpp','README.md'],java:['Main.java','README.md'],landing:['index.html']};
+    const arquivos=tipos[p.tipo]||['index.html'];
+    sb.innerHTML=`<div class="sidebar-label">${projeto}</div>`+
+      arquivos.map(f=>
+        `<div class="file-item" onclick="selectFile(this,'${f}')"><div class="fdot" style="background:${f.endsWith('.html')?'#E24B4A':f.endsWith('.js')||f.endsWith('.py')?'#EF9F27':'#378ADD'}"></div>${f}</div>`
+      ).join('')+
+      `<div style="padding:8px 12px;margin-top:8px;display:flex;flex-direction:column;gap:4px">
+        <button onclick="verProjeto('${projeto}')" style="width:100%;padding:5px;background:#1D9E75;border:none;border-radius:4px;color:#fff;font-size:11px;cursor:pointer;font-family:sans-serif">🌐 Visualizar</button>
+      </div>`;
   }
 }
 
-function verProjeto(nome) {
-  window.open('/projetos/ver/' + nome, '_blank');
+function verProjeto(nome){window.open('/projetos/ver/'+nome,'_blank');}
+
+function abrirModal(){document.getElementById('modal').classList.add('open');document.getElementById('nomeProj').focus();}
+function fecharModal(){document.getElementById('modal').classList.remove('open');}
+function selTipo(el){document.querySelectorAll('.tipo-btn').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');tipoSel=el.dataset.tipo;}
+
+function criarProjeto(){
+  const nome=document.getElementById('nomeProj').value.trim().replace(/[^a-z0-9-_]/gi,'-').toLowerCase();
+  if(!nome){addLog('✗ Digite um nome','t-err');return;}
+  addLog('$ Criando projeto "'+nome+'" ('+tipoSel+')...','t-muted');
+  fetch('/projetos/criar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome,tipo:tipoSel})})
+    .then(r=>r.json()).then(data=>{
+      if(data.ok){projetos[nome]={nome,tipo:tipoSel};addAba(nome,tipoSel);addLog('✓ Projeto "'+nome+'" criado!','t-ok');fecharModal();document.getElementById('nomeProj').value='';}
+      else addLog('✗ '+data.mensagem,'t-err');
+    }).catch(e=>addLog('✗ '+e.message,'t-err'));
 }
 
-function abrirModal() {
-  document.getElementById('modal').classList.add('open');
-  document.getElementById('nomeProj').focus();
+function addAba(nome,tipo){
+  const cores={site:'#E24B4A',api:'#EF9F27',python:'#5DCAA5',cpp:'#378ADD',java:'#EF9F27',landing:'#D4537E'};
+  const icones={site:'🌐',api:'⚡',python:'🐍',cpp:'⚙',java:'☕',landing:'🚀'};
+  const abas=document.getElementById('abas');
+  const aba=document.createElement('div');
+  aba.className='aba';aba.dataset.projeto=nome;
+  aba.innerHTML=`<div class="aba-dot" style="background:${cores[tipo]||'#5DCAA5'}"></div>${icones[tipo]||'📁'} ${nome}<span style="color:#555;font-size:14px;padding:0 2px;margin-left:4px" onclick="fecharAba(event,'${nome}')">×</span>`;
+  aba.onclick=function(e){if(e.target.tagName!=='SPAN')selectAba(this,nome);};
+  abas.appendChild(aba);selectAba(aba,nome);
 }
 
-function fecharModal() {
-  document.getElementById('modal').classList.remove('open');
-}
-
-function selTipo(el) {
-  document.querySelectorAll('.tipo-btn').forEach(e => e.classList.remove('sel'));
-  el.classList.add('sel');
-  tipoSel = el.dataset.tipo;
-}
-
-function criarProjeto() {
-  const nome = document.getElementById('nomeProj').value.trim().replace(/[^a-z0-9-_]/gi, '-').toLowerCase();
-  if (!nome) { addLog('✗ Digite um nome para o projeto', 't-err'); return; }
-  addLog('$ Criando projeto "' + nome + '" (' + tipoSel + ')...', 't-muted');
-  fetch('/projetos/criar', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ nome, tipo: tipoSel })
-  }).then(r => r.json()).then(data => {
-    if (data.ok) {
-      projetos[nome] = { nome, tipo: tipoSel };
-      addAba(nome, tipoSel);
-      addLog('✓ Projeto "' + nome + '" criado!', 't-ok');
-      fecharModal();
-      document.getElementById('nomeProj').value = '';
-    } else {
-      addLog('✗ ' + data.mensagem, 't-err');
-    }
-  }).catch(e => addLog('✗ Erro: ' + e.message, 't-err'));
-}
-
-function addAba(nome, tipo) {
-  const cores = { site:'#E24B4A', api:'#EF9F27', python:'#5DCAA5', cpp:'#378ADD', java:'#EF9F27', landing:'#D4537E' };
-  const icones = { site:'🌐', api:'⚡', python:'🐍', cpp:'⚙', java:'☕', landing:'🚀' };
-  const abas = document.getElementById('abas');
-  const aba = document.createElement('div');
-  aba.className = 'aba';
-  aba.dataset.projeto = nome;
-  aba.innerHTML = `<div class="aba-dot" style="background:${cores[tipo]||'#5DCAA5'}"></div>${icones[tipo]||'📁'} ${nome}<span class="aba-close" onclick="fecharAba(event,'${nome}')">×</span>`;
-  aba.onclick = function(e) { if (!e.target.classList.contains('aba-close')) selectAba(this, nome); };
-  abas.appendChild(aba);
-  selectAba(aba, nome);
-}
-
-function fecharAba(e, nome) {
+function fecharAba(e,nome){
   e.stopPropagation();
-  const aba = document.querySelector(`.aba[data-projeto="${nome}"]`);
-  if (aba) aba.remove();
+  const aba=document.querySelector(`.aba[data-projeto="${nome}"]`);
+  if(aba)aba.remove();
   delete projetos[nome];
-  selectAba(document.querySelector('.aba'), '__painel__');
-  addLog('✓ Aba "' + nome + '" fechada', 't-muted');
+  const primeira=document.querySelector('.aba');
+  if(primeira)selectAba(primeira,'__painel__');
 }
 
-function publicar() {
-  const btn = document.getElementById('publishBtn');
-  btn.disabled = true; btn.textContent = 'Publicando...';
-  addLog('$ publicando...', 't-muted');
-  fetch('/publicar').then(r => r.text()).then(txt => {
-    addLog('✓ ' + txt, 't-ok');
-    btn.textContent = '⬆ Publicar'; btn.disabled = false;
-  }).catch(e => {
-    addLog('✗ ' + e.message, 't-err');
-    btn.textContent = '⬆ Publicar'; btn.disabled = false;
-  });
+function publicar(){
+  const btn=document.getElementById('publishBtn');
+  btn.disabled=true;btn.textContent='Publicando...';
+  addLog('$ publicando...','t-muted');
+  fetch('/publicar').then(r=>r.text()).then(txt=>{
+    addLog('✓ '+txt,'t-ok');btn.textContent='⬆ Publicar';btn.disabled=false;
+  }).catch(e=>{addLog('✗ '+e.message,'t-err');btn.textContent='⬆ Publicar';btn.disabled=false;});
 }
 
-fetch('/projetos/listar').then(r => r.json()).then(lista => {
-  lista.forEach(p => { projetos[p.nome] = p; addAba(p.nome, p.tipo); });
+function executarArquivoAtual(){
+  const arquivo=document.getElementById('statusFile').textContent;
+  if(!arquivo||arquivo==='painel'||abaAtiva==='__painel__'){addLog('✗ Selecione um projeto e arquivo','t-err');return;}
+  addLog('$ Executando '+arquivo+'...','t-muted');
+  fetch('/projetos/executar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({projeto:abaAtiva,arquivo})})
+    .then(r=>r.json()).then(data=>{
+      data.saida.split('\n').forEach(l=>{if(l.trim())addLog(l,data.ok?'t-ok':'t-err');});
+    }).catch(e=>addLog('✗ '+e.message,'t-err'));
+}
+
+function executarComando(){
+  const input=document.getElementById('termInput');
+  const cmd=input.value.trim();
+  if(!cmd)return;
+  input.value='';
+  addLog('$ '+cmd,'t-cmd');
+  if(cmd==='clear'){document.getElementById('terminal').innerHTML='';return;}
+  if(cmd==='help'){
+    ['Comandos disponíveis:','  npm install [pacote]','  node [arquivo]','  python3 [arquivo]','  g++ [arquivo]','  ls — listar arquivos','  clear — limpar terminal','  ▶ Executar — roda arquivo aberto'].forEach(l=>addLog(l,'t-muted'));
+    return;
+  }
+  fetch('/cmd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cmd,projeto:abaAtiva!=='__painel__'?abaAtiva:null})})
+    .then(r=>r.json()).then(data=>{
+      data.saida.split('\n').forEach(l=>{if(l.trim())addLog(l,data.ok?'t-ok':'t-err');});
+    }).catch(e=>addLog('✗ '+e.message,'t-err'));
+}
+
+document.getElementById('editor').addEventListener('input',function(){
+  clearTimeout(window._saveTimer);
+  window._saveTimer=setTimeout(()=>{
+    const arquivo=document.getElementById('statusFile').textContent;
+    if(!arquivo||arquivo==='painel'||abaAtiva==='__painel__')return;
+    fetch('/projetos/salvar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({projeto:abaAtiva,arquivo,conteudo:document.getElementById('editor').value})})
+      .then(r=>r.json()).then(data=>{if(data.ok)addLog('✓ '+arquivo+' salvo','t-ok');});
+  },1500);
+});
+
+fetch('/projetos/listar').then(r=>r.json()).then(lista=>{
+  lista.forEach(p=>{projetos[p.nome]=p;addAba(p.nome,p.tipo);});
 }).catch(()=>{});
 </script>
 </body>
 </html>
-<script>
-document.getElementById('editor').addEventListener('input', function() {
-  clearTimeout(window._saveTimer);
-  window._saveTimer = setTimeout(salvarArquivo, 1500);
-});
-
-function salvarArquivo() {
-  const editor = document.getElementById('editor');
-  const arquivo = document.getElementById('statusFile').textContent;
-  if (!arquivo || arquivo === 'painel') return;
-  
-  const url = abaAtiva === '__painel__' ? null : '/projetos/salvar';
-  if (!url) return;
-
-  fetch(url, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ projeto: abaAtiva, arquivo, conteudo: editor.value })
-  }).then(r => r.json()).then(data => {
-    if (data.ok) addLog('✓ ' + arquivo + ' salvo automaticamente', 't-ok');
-    else addLog('✗ Erro ao salvar', 't-err');
-  }).catch(e => addLog('✗ ' + e.message, 't-err'));
-}
-</script>
-<style>
-.terminal-input-area{display:flex;gap:6px;padding:6px 16px;background:#0d0d0d;border-top:1px solid #1a1a1a;flex-shrink:0}
-.terminal-input{flex:1;background:transparent;border:none;color:#5DCAA5;font-family:'Courier New',monospace;font-size:12px;outline:none}
-.run-btn{padding:4px 12px;background:#1D9E75;border:none;border-radius:4px;color:#fff;font-size:11px;cursor:pointer;font-family:sans-serif;white-space:nowrap}
-.run-btn:hover{background:#0F6E56}
-</style>
-<script>
-document.querySelector('.terminal').insertAdjacentHTML('afterend', `
-<div class="terminal-input-area">
-  <span style="color:#555;font-size:12px;font-family:Courier New,monospace">$</span>
-  <input class="terminal-input" id="termInput" placeholder="digite um comando ou clique ▶ Executar..." onkeydown="if(event.key==='Enter')executarComando()"/>
-  <button class="run-btn" onclick="executarArquivoAtual()">▶ Executar</button>
-</div>
-`);
-
-function executarArquivoAtual() {
-  const arquivo = document.getElementById('statusFile').textContent;
-  if (!arquivo || arquivo === 'painel' || abaAtiva === '__painel__') {
-    addLog('✗ Selecione um projeto e arquivo para executar', 't-err');
-    return;
-  }
-  addLog('$ Executando ' + arquivo + '...', 't-muted');
-  fetch('/projetos/executar', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ projeto: abaAtiva, arquivo })
-  }).then(r => r.json()).then(data => {
-    data.saida.split('\n').forEach(linha => {
-      if (linha.trim()) addLog(linha, data.ok ? 't-ok' : 't-err');
-    });
-  }).catch(e => addLog('✗ ' + e.message, 't-err'));
-}
-
-function executarComando() {
-  const input = document.getElementById('termInput');
-  const cmd = input.value.trim();
-  if (!cmd) return;
-  input.value = '';
-  addLog('$ ' + cmd, 't-cmd');
-
-  const comandos = {
-    'ls projetos': () => fetch('/projetos/listar').then(r=>r.json()).then(d=>d.forEach(p=>addLog('📁 '+p.nome+' ('+p.tipo+')', 't-ok'))),
-    'help': () => {
-      ['Comandos disponíveis:','  ls projetos — lista projetos','  clear — limpa terminal','  ▶ Executar — roda o arquivo aberto'].forEach(l=>addLog(l,'t-muted'));
-    },
-    'clear': () => { document.getElementById('terminal').innerHTML = ''; }
-  };
-
-  if (comandos[cmd]) {
-    comandos[cmd]();
-  } else {
-    addLog('✗ Comando não reconhecido. Digite "help"', 't-err');
-  }
-}
-</script>
