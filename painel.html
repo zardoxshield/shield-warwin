@@ -287,3 +287,228 @@ fetch('/projetos/listar').then(r=>r.json()).then(lista=>{
 </script>
 </body>
 </html>
+<style id="termPro">
+.terminal-wrap{display:flex;flex-direction:column;background:#0a0a0a;border:1px solid #1f1f1f;border-radius:8px;overflow:hidden;font-family:'JetBrains Mono','Fira Code','Courier New',monospace}
+.term-header{display:flex;align-items:center;gap:8px;padding:8px 14px;background:linear-gradient(180deg,#1a1a1a,#0f0f0f);border-bottom:1px solid #1f1f1f}
+.term-dot{width:12px;height:12px;border-radius:50%}
+.term-dot.r{background:#ff5f56;box-shadow:inset 0 0 0 1px #e0443e}
+.term-dot.y{background:#ffbd2e;box-shadow:inset 0 0 0 1px #dea123}
+.term-dot.g{background:#27c93f;box-shadow:inset 0 0 0 1px #1aab29}
+.term-title{flex:1;text-align:center;color:#888;font-size:11px;letter-spacing:.5px;font-family:sans-serif}
+.term-body{flex:1;background:#0a0a0a;padding:10px 14px;overflow-y:auto;font-size:12.5px;line-height:1.55;color:#e6e6e6;min-height:200px}
+.term-body::-webkit-scrollbar{width:6px}
+.term-body::-webkit-scrollbar-track{background:transparent}
+.term-body::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:3px}
+.term-body::-webkit-scrollbar-thumb:hover{background:#3a3a3a}
+.term-line{padding:1px 0;white-space:pre-wrap;word-break:break-word}
+.term-line.t-cmd{color:#e6e6e6}
+.term-line.t-ok{color:#5DCAA5}
+.term-line.t-err{color:#ff6b6b}
+.term-line.t-muted{color:#666}
+.term-line.t-info{color:#5dc8ec}
+.term-line.t-warn{color:#ffbd2e}
+.term-prompt{color:#5DCAA5;font-weight:600}
+.term-at{color:#888}
+.term-host{color:#5dc8ec;font-weight:600}
+.term-path{color:#ffbd2e}
+.term-sym{color:#e6e6e6;margin-right:6px}
+.term-input-line{display:flex;align-items:center;padding:6px 14px;background:#0a0a0a;border-top:1px solid #1a1a1a;gap:8px}
+.term-input-prefix{display:flex;align-items:center;gap:0;font-size:12.5px;font-family:'JetBrains Mono','Fira Code','Courier New',monospace;white-space:nowrap}
+.term-input-pro{flex:1;background:transparent;border:none;color:#e6e6e6;font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:12.5px;outline:none;caret-color:#5DCAA5}
+.term-cursor{display:inline-block;width:8px;height:14px;background:#5DCAA5;animation:blink 1s steps(1) infinite;vertical-align:middle;margin-left:2px}
+@keyframes blink{50%{opacity:0}}
+.term-run-btn{padding:5px 14px;background:linear-gradient(180deg,#1D9E75,#0F6E56);border:1px solid #0F6E56;border-radius:5px;color:#fff;font-size:11px;cursor:pointer;font-family:sans-serif;font-weight:600;letter-spacing:.3px;transition:all .15s}
+.term-run-btn:hover{background:linear-gradient(180deg,#22b386,#13805f);transform:translateY(-1px)}
+.term-run-btn:active{transform:translateY(0)}
+.term-hint{color:#444;font-size:10px;font-family:sans-serif;padding:2px 14px;background:#080808;border-top:1px solid #141414}
+.term-hint kbd{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:3px;padding:1px 5px;color:#888;font-size:10px;font-family:monospace}
+</style>
+
+<script>
+(function(){
+  // Substitui o terminal antigo pelo novo após o DOM carregar
+  function upgradeTerminal(){
+    const oldTerm = document.getElementById('terminal') || document.querySelector('.terminal');
+    if(!oldTerm) return setTimeout(upgradeTerminal, 200);
+
+    // Cria estrutura nova
+    const wrap = document.createElement('div');
+    wrap.className = 'terminal-wrap';
+    wrap.innerHTML = `
+      <div class="term-header">
+        <div class="term-dot r"></div>
+        <div class="term-dot y"></div>
+        <div class="term-dot g"></div>
+        <div class="term-title">shield@warwin: ~</div>
+      </div>
+      <div class="term-body" id="terminal"></div>
+      <div class="term-input-line">
+        <div class="term-input-prefix">
+          <span class="term-prompt">shield</span><span class="term-at">@</span><span class="term-host">warwin</span><span class="term-sym">:</span><span class="term-path" id="termPath">~</span><span class="term-sym">$</span>
+        </div>
+        <input class="term-input-pro" id="termInput" autocomplete="off" spellcheck="false" placeholder="digite um comando — 'help' pra ver tudo"/>
+        <button class="term-run-btn" onclick="executarArquivoAtual()">▶ Executar</button>
+      </div>
+      <div class="term-hint">
+        <kbd>↑</kbd> <kbd>↓</kbd> histórico &nbsp;·&nbsp; <kbd>Tab</kbd> autocompletar &nbsp;·&nbsp; <kbd>Ctrl</kbd>+<kbd>L</kbd> limpar &nbsp;·&nbsp; <kbd>Ctrl</kbd>+<kbd>C</kbd> cancelar
+      </div>
+    `;
+
+    // Substitui o antigo
+    const parent = oldTerm.parentElement;
+    // remove input area antiga se existir
+    const oldInput = parent.querySelector('.terminal-input-area');
+    if(oldInput) oldInput.remove();
+    parent.replaceChild(wrap, oldTerm);
+
+    // Atualiza path conforme aba ativa
+    const pathEl = document.getElementById('termPath');
+    const obs = new MutationObserver(()=>{
+      if(typeof abaAtiva !== 'undefined'){
+        pathEl.textContent = abaAtiva && abaAtiva !== '__painel__' ? '~/'+abaAtiva : '~';
+      }
+    });
+    obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+    setInterval(()=>{
+      if(typeof abaAtiva !== 'undefined'){
+        pathEl.textContent = abaAtiva && abaAtiva !== '__painel__' ? '~/'+abaAtiva : '~';
+      }
+    }, 500);
+
+    // Histórico
+    const historico = JSON.parse(localStorage.getItem('term_hist')||'[]');
+    let histIdx = historico.length;
+    const COMANDOS = ['help','clear','ls','pwd','npm install','npm run','node','python3','g++','java','cat','echo','mkdir','ls projetos'];
+
+    const input = document.getElementById('termInput');
+
+    input.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowUp'){
+        e.preventDefault();
+        if(historico.length === 0) return;
+        histIdx = Math.max(0, histIdx-1);
+        input.value = historico[histIdx] || '';
+        setTimeout(()=>input.setSelectionRange(input.value.length, input.value.length), 0);
+      } else if(e.key === 'ArrowDown'){
+        e.preventDefault();
+        histIdx = Math.min(historico.length, histIdx+1);
+        input.value = historico[histIdx] || '';
+      } else if(e.key === 'Tab'){
+        e.preventDefault();
+        const v = input.value.trim();
+        if(!v) return;
+        const match = COMANDOS.find(c => c.startsWith(v));
+        if(match) input.value = match + ' ';
+      } else if(e.key === 'Enter'){
+        const cmd = input.value.trim();
+        if(cmd){
+          historico.push(cmd);
+          if(historico.length > 100) historico.shift();
+          localStorage.setItem('term_hist', JSON.stringify(historico));
+          histIdx = historico.length;
+        }
+        executarComandoPro();
+      } else if((e.ctrlKey || e.metaKey) && e.key === 'l'){
+        e.preventDefault();
+        document.getElementById('terminal').innerHTML = '';
+      } else if((e.ctrlKey || e.metaKey) && e.key === 'c'){
+        if(!window.getSelection().toString()){
+          e.preventDefault();
+          addLog('^C', 't-muted');
+          input.value = '';
+        }
+      }
+    });
+
+    // Banner inicial
+    addLog('╭─────────────────────────────────────────╮','t-info');
+    addLog('│  Shield Warwin Terminal Pro v2.0        │','t-info');
+    addLog('│  Digite "help" para ver os comandos     │','t-info');
+    addLog('╰─────────────────────────────────────────╯','t-info');
+    addLog('','t-muted');
+  }
+
+  // Função addLog melhorada (sobrescreve)
+  window.addLog = function(texto, classe){
+    const term = document.getElementById('terminal');
+    if(!term) return;
+    const linha = document.createElement('div');
+    linha.className = 'term-line ' + (classe || 't-cmd');
+    if(classe === 't-cmd' && texto.startsWith('$ ')){
+      // Renderiza prompt colorido para comandos
+      const cmd = texto.slice(2);
+      linha.innerHTML = `<span class="term-prompt">shield</span><span class="term-at">@</span><span class="term-host">warwin</span>:<span class="term-path">${(typeof abaAtiva!=='undefined' && abaAtiva && abaAtiva!=='__painel__')?'~/'+abaAtiva:'~'}</span>$ <span style="color:#e6e6e6">${cmd.replace(/</g,'&lt;')}</span>`;
+    } else {
+      linha.textContent = texto;
+    }
+    term.appendChild(linha);
+    term.scrollTop = term.scrollHeight;
+  };
+
+  // Função executar comando profissional
+  window.executarComandoPro = function(){
+    const input = document.getElementById('termInput');
+    const cmd = input.value.trim();
+    if(!cmd) return;
+    input.value = '';
+    addLog('$ ' + cmd, 't-cmd');
+
+    if(cmd === 'clear' || cmd === 'cls'){
+      document.getElementById('terminal').innerHTML = '';
+      return;
+    }
+    if(cmd === 'help'){
+      [
+        'Comandos disponíveis:',
+        '  help              — mostra esta ajuda',
+        '  clear / cls       — limpa o terminal',
+        '  ls projetos       — lista todos os projetos',
+        '  npm install <pkg> — instala pacote npm',
+        '  node <arquivo>    — executa arquivo node',
+        '  python3 <arquivo> — executa arquivo python',
+        '  g++ <arquivo>     — compila C++',
+        '  ▶ Executar        — roda o arquivo aberto',
+        '',
+        'Atalhos: ↑/↓ histórico · Tab autocomplete · Ctrl+L limpar'
+      ].forEach(l => addLog(l, 't-muted'));
+      return;
+    }
+    if(cmd === 'ls projetos'){
+      fetch('/projetos/listar').then(r=>r.json()).then(d=>{
+        if(!d.length) addLog('  (nenhum projeto ainda)', 't-muted');
+        else d.forEach(p => addLog('  📁 ' + p.nome + '  ' + '·  '.padStart(20-p.nome.length,' ') + p.tipo, 't-info'));
+      }).catch(e => addLog('✗ ' + e.message, 't-err'));
+      return;
+    }
+    if(cmd === 'pwd'){
+      const p = (typeof abaAtiva!=='undefined' && abaAtiva && abaAtiva!=='__painel__') ? '/app/projetos/'+abaAtiva : '/app';
+      addLog(p, 't-info');
+      return;
+    }
+
+    // Manda pro backend
+    fetch('/cmd', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({cmd, projeto: (typeof abaAtiva!=='undefined' && abaAtiva!=='__painel__') ? abaAtiva : null})
+    })
+    .then(r => r.json())
+    .then(data => {
+      const linhas = (data.saida || '').split('\n');
+      linhas.forEach(l => { if(l.trim()) addLog(l, data.ok ? 't-ok' : 't-err'); });
+      if(!linhas.some(l=>l.trim())) addLog(data.ok ? '✓ executado' : '✗ falhou', data.ok ? 't-ok' : 't-err');
+    })
+    .catch(e => addLog('✗ ' + e.message, 't-err'));
+  };
+
+  // Sobrescreve a função antiga
+  window.executarComando = window.executarComandoPro;
+
+  // Roda quando o DOM tiver pronto
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', upgradeTerminal);
+  } else {
+    upgradeTerminal();
+  }
+})();
+</script>
