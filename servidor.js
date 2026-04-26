@@ -3,7 +3,8 @@ const fs = require('fs');
 const https = require('https');
 const url = require('url');
 const path = require('path');
-const { exec } = require('child_process');
+const { exec, spawn } = require('child_process');
+const sessions = new Map(); // sessionId -> { proc, output, status }
 
 const PROJETOS_DIR = '/app/projetos';
 if (!fs.existsSync(PROJETOS_DIR)) fs.mkdirSync(PROJETOS_DIR, { recursive: true });
