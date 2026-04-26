@@ -7,217 +7,280 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Courier New',monospace;background:#0f0f0f;color:#e0e0e0;height:100vh;display:flex;flex-direction:column;overflow:hidden}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#1a1a1a;border-bottom:1px solid #2a2a2a}
-.logo{font-size:16px;font-weight:bold;color:#5DCAA5}
-.publish-btn{padding:8px 20px;background:#1D9E75;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:bold}
-.publish-btn:hover{background:#0F6E56}
-.publish-btn:disabled{opacity:0.5;cursor:not-allowed}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:#1a1a1a;border-bottom:1px solid #2a2a2a;flex-shrink:0}
+.logo{font-size:15px;font-weight:bold;color:#5DCAA5}
+.topbar-btns{display:flex;gap:8px}
+.btn-novo{padding:6px 14px;background:#1D9E75;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:12px;font-weight:bold}
+.btn-novo:hover{background:#0F6E56}
+.btn-pub{padding:6px 14px;background:#378ADD;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:12px;font-weight:bold}
+.btn-pub:hover{background:#185FA5}
+.btn-pub:disabled{opacity:0.5;cursor:not-allowed}
+.abas{display:flex;align-items:center;background:#141414;border-bottom:1px solid #2a2a2a;overflow-x:auto;flex-shrink:0}
+.aba{display:flex;align-items:center;gap:6px;padding:7px 14px;font-size:12px;color:#666;cursor:pointer;border-right:1px solid #2a2a2a;white-space:nowrap;font-family:sans-serif}
+.aba:hover{color:#ccc;background:#1a1a1a}
+.aba.active{color:#e0e0e0;background:#1a1a1a;border-top:1px solid #5DCAA5}
+.aba-close{color:#555;font-size:14px;line-height:1;padding:0 2px}
+.aba-close:hover{color:#F09595}
+.aba-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .main{display:flex;flex:1;min-height:0}
 .sidebar{width:180px;background:#141414;border-right:1px solid #2a2a2a;padding:10px 0;overflow-y:auto;flex-shrink:0}
-.sidebar-label{font-size:10px;color:#666;padding:6px 12px;text-transform:uppercase;letter-spacing:0.1em}
-.file-item{display:flex;align-items:center;gap:8px;padding:6px 12px;font-size:12px;color:#999;cursor:pointer}
+.sidebar-label{font-size:10px;color:#555;padding:6px 12px;text-transform:uppercase;letter-spacing:0.1em;font-family:sans-serif}
+.file-item{display:flex;align-items:center;gap:8px;padding:5px 12px;font-size:12px;color:#888;cursor:pointer}
 .file-item:hover,.file-item.active{background:#1e1e1e;color:#e0e0e0}
-.dot{width:7px;height:7px;border-radius:50%}
+.fdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .center{flex:1;display:flex;flex-direction:column;min-width:0}
-.editor{flex:1;padding:16px;background:#1a1a1a;font-size:13px;line-height:1.7;overflow-y:auto;outline:none;white-space:pre;color:#c9d1d9;min-height:0;resize:none;border:none;font-family:'Courier New',monospace}
-.terminal{height:140px;background:#0d0d0d;padding:10px 16px;font-size:12px;color:#5DCAA5;overflow-y:auto;border-top:1px solid #2a2a2a;flex-shrink:0}
+.editor{flex:1;padding:16px;background:#1a1a1a;font-size:13px;line-height:1.7;overflow-y:auto;outline:none;color:#c9d1d9;min-height:0;resize:none;border:none;font-family:'Courier New',monospace}
+.terminal{height:130px;background:#0d0d0d;padding:10px 16px;font-size:12px;color:#5DCAA5;overflow-y:auto;border-top:1px solid #2a2a2a;flex-shrink:0}
 .t-err{color:#F09595}.t-ok{color:#5DCAA5}.t-muted{color:#555}.t-cmd{color:#EF9F27}
-.ai-panel{width:240px;background:#141414;border-left:1px solid #2a2a2a;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
-.ai-header{font-size:11px;color:#666;padding:10px 12px;border-bottom:1px solid #2a2a2a;font-family:sans-serif;text-transform:uppercase;letter-spacing:0.08em;position:sticky;top:0;background:#141414}
-.suggestions{padding:8px;display:flex;flex-direction:column;gap:5px}
-.sug{font-family:sans-serif;font-size:11px;text-align:left;padding:8px 10px;border-radius:5px;border:1px solid #2a2a2a;background:#1a1a1a;color:#ccc;cursor:pointer;line-height:1.4;width:100%}
+.ai-panel{width:220px;background:#141414;border-left:1px solid #2a2a2a;display:flex;flex-direction:column;flex-shrink:0}
+.ai-header{font-size:10px;color:#555;padding:8px 12px;border-bottom:1px solid #2a2a2a;font-family:sans-serif;text-transform:uppercase;letter-spacing:0.08em}
+.suggestions{flex:1;overflow-y:auto;padding:6px;display:flex;flex-direction:column;gap:4px}
+.sug{font-family:sans-serif;font-size:11px;text-align:left;padding:7px 10px;border-radius:5px;border:1px solid #2a2a2a;background:#1a1a1a;color:#bbb;cursor:pointer;line-height:1.4;width:100%}
 .sug:hover{border-color:#5DCAA5;color:#fff}
-.sug-cat{font-size:9px;color:#5DCAA5;display:block;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.08em}
-.statusbar{display:flex;align-items:center;gap:16px;padding:4px 16px;background:#1a1a1a;border-top:1px solid #2a2a2a;font-size:10px;color:#555;font-family:sans-serif;flex-shrink:0}
+.sug-cat{font-size:9px;color:#5DCAA5;display:block;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.06em}
+.statusbar{display:flex;align-items:center;gap:16px;padding:3px 16px;background:#1a1a1a;border-top:1px solid #2a2a2a;font-size:10px;color:#555;font-family:sans-serif;flex-shrink:0}
 .sdot{width:6px;height:6px;border-radius:50%;background:#1D9E75;display:inline-block;margin-right:4px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:100;align-items:center;justify-content:center}
+.modal.open{display:flex}
+.modal-box{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:24px;width:360px}
+.modal-title{font-family:sans-serif;font-size:15px;font-weight:bold;color:#5DCAA5;margin-bottom:16px}
+.modal-label{font-family:sans-serif;font-size:11px;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em}
+.modal-input{width:100%;padding:8px 10px;background:#0f0f0f;border:1px solid #2a2a2a;border-radius:5px;color:#e0e0e0;font-size:13px;margin-bottom:14px;font-family:'Courier New',monospace}
+.modal-input:focus{outline:none;border-color:#5DCAA5}
+.tipos{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:16px}
+.tipo-btn{padding:8px 4px;background:#0f0f0f;border:1px solid #2a2a2a;border-radius:5px;color:#888;font-size:11px;cursor:pointer;font-family:sans-serif;text-align:center}
+.tipo-btn:hover,.tipo-btn.sel{border-color:#5DCAA5;color:#5DCAA5;background:#0f1f1a}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end}
+.modal-cancel{padding:7px 14px;background:transparent;border:1px solid #2a2a2a;border-radius:5px;color:#666;font-size:12px;cursor:pointer;font-family:sans-serif}
+.modal-ok{padding:7px 14px;background:#1D9E75;border:none;border-radius:5px;color:#fff;font-size:12px;cursor:pointer;font-family:sans-serif;font-weight:bold}
+.projeto-vazio{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:#333;font-family:sans-serif;gap:8px}
+.projeto-vazio span{font-size:2rem}
 </style>
 </head>
 <body>
 <div class="topbar">
   <span class="logo">🚀 Shield Warwin IDE</span>
-  <button class="publish-btn" id="publishBtn" onclick="publicar()">⬆ Publicar Site</button>
-</div>
-<div class="main">
-  <div class="sidebar">
-    <div class="sidebar-label">Arquivos</div>
-    <div class="file-item active" onclick="selectFile(this,'index.html')"><div class="dot" style="background:#E24B4A"></div>index.html</div>
-    <div class="file-item" onclick="selectFile(this,'painel.html')"><div class="dot" style="background:#E24B4A"></div>painel.html</div>
-    <div class="file-item" onclick="selectFile(this,'servidor.js')"><div class="dot" style="background:#EF9F27"></div>servidor.js</div>
-    <div class="file-item" onclick="selectFile(this,'Dockerfile')"><div class="dot" style="background:#378ADD"></div>Dockerfile</div>
+  <div class="topbar-btns">
+    <button class="btn-novo" onclick="abrirModal()">+ Novo Projeto</button>
+    <button class="btn-pub" id="publishBtn" onclick="publicar()">⬆ Publicar</button>
   </div>
+</div>
+
+<div class="abas" id="abas">
+  <div class="aba active" data-projeto="__painel__" onclick="selectAba(this,'__painel__')">
+    <div class="aba-dot" style="background:#5DCAA5"></div>
+    Painel
+  </div>
+</div>
+
+<div class="main">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-label">Arquivos</div>
+    <div class="file-item active" onclick="selectFile(this,'index.html')"><div class="fdot" style="background:#E24B4A"></div>index.html</div>
+    <div class="file-item" onclick="selectFile(this,'painel.html')"><div class="fdot" style="background:#E24B4A"></div>painel.html</div>
+    <div class="file-item" onclick="selectFile(this,'servidor.js')"><div class="fdot" style="background:#EF9F27"></div>servidor.js</div>
+    <div class="file-item" onclick="selectFile(this,'Dockerfile')"><div class="fdot" style="background:#378ADD"></div>Dockerfile</div>
+  </div>
+
   <div class="center">
-    <textarea class="editor" id="editor" spellcheck="false">// Selecione um arquivo à esquerda para editar</textarea>
+    <textarea class="editor" id="editor" spellcheck="false">// Selecione um arquivo à esquerda</textarea>
     <div class="terminal" id="terminal">
       <div class="t-muted">$ Shield Warwin IDE iniciado</div>
       <div class="t-ok">✓ Servidor online · porta 9999</div>
-      <div class="t-muted">$ aguardando comandos...</div>
+      <div class="t-muted">$ aguardando...</div>
     </div>
   </div>
+
   <div class="ai-panel">
     <div class="ai-header">✦ Próximos passos</div>
-    <div class="suggestions">
-
-      <button class="sug" onclick="mostrar('auth')"><span class="sug-cat">Segurança</span>Adicionar login de usuário</button>
-      <button class="sug" onclick="mostrar('api')"><span class="sug-cat">Backend</span>Criar rotas API REST</button>
-      <button class="sug" onclick="mostrar('db')"><span class="sug-cat">Banco de dados</span>Conectar banco SQLite</button>
-      <button class="sug" onclick="mostrar('css')"><span class="sug-cat">Frontend</span>Melhorar CSS do site</button>
-      <button class="sug" onclick="mostrar('ws')"><span class="sug-cat">Tempo real</span>Adicionar WebSocket</button>
-      <button class="sug" onclick="mostrar('env')"><span class="sug-cat">Deploy</span>Variáveis de ambiente</button>
-      <button class="sug" onclick="mostrar('upload')"><span class="sug-cat">Funcionalidade</span>Upload de arquivos</button>
-      <button class="sug" onclick="mostrar('log')"><span class="sug-cat">Monitoramento</span>Adicionar logs</button>
-
+    <div class="suggestions" id="suggestions">
+      <button class="sug" onclick="dica('auth')"><span class="sug-cat">Segurança</span>Login de usuário</button>
+      <button class="sug" onclick="dica('api')"><span class="sug-cat">Backend</span>Criar API REST</button>
+      <button class="sug" onclick="dica('db')"><span class="sug-cat">Banco de dados</span>Conectar SQLite</button>
+      <button class="sug" onclick="dica('css')"><span class="sug-cat">Frontend</span>Melhorar CSS</button>
+      <button class="sug" onclick="dica('ws')"><span class="sug-cat">Tempo real</span>WebSocket</button>
+      <button class="sug" onclick="dica('env')"><span class="sug-cat">Deploy</span>Variáveis de ambiente</button>
+      <button class="sug" onclick="dica('upload')"><span class="sug-cat">Funcionalidade</span>Upload de arquivos</button>
+      <button class="sug" onclick="dica('log')"><span class="sug-cat">Monitoramento</span>Adicionar logs</button>
+      <button class="sug" onclick="dica('dominio')"><span class="sug-cat">Publicar</span>Colocar domínio</button>
     </div>
   </div>
 </div>
+
 <div class="statusbar">
   <span><span class="sdot"></span>Online</span>
-  <span id="activeFile">index.html</span>
+  <span id="statusFile">painel</span>
   <span>Node.js v18 · Docker · Coolify</span>
 </div>
 
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-title">+ Novo Projeto</div>
+    <div class="modal-label">Nome do projeto</div>
+    <input class="modal-input" id="nomeProj" placeholder="meu-site" />
+    <div class="modal-label">Tipo</div>
+    <div class="tipos">
+      <button class="tipo-btn sel" data-tipo="site" onclick="selTipo(this)">🌐 Site</button>
+      <button class="tipo-btn" data-tipo="landing" onclick="selTipo(this)">🚀 Landing</button>
+      <button class="tipo-btn" data-tipo="api" onclick="selTipo(this)">⚡ API</button>
+      <button class="tipo-btn" data-tipo="python" onclick="selTipo(this)">🐍 Python</button>
+      <button class="tipo-btn" data-tipo="cpp" onclick="selTipo(this)">⚙ C++</button>
+      <button class="tipo-btn" data-tipo="java" onclick="selTipo(this)">☕ Java</button>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="fecharModal()">Cancelar</button>
+      <button class="modal-ok" onclick="criarProjeto()">Criar Projeto</button>
+    </div>
+  </div>
+</div>
+
 <script>
+let abaAtiva = '__painel__';
+let tipoSel = 'site';
+let projetos = {};
+
 const dicas = {
-  auth: [
-    '── Login de usuário ──',
-    '$ npm install express-session bcrypt',
-    '// No servidor.js adicione:',
-    'const session = require("express-session");',
-    'const bcrypt = require("bcrypt");',
-    '// Rota de login:',
-    'app.post("/login", (req,res) => { ... })',
-    '✓ Guarda senha com bcrypt.hash()',
-    '✓ Usa session para manter login'
-  ],
-  api: [
-    '── Rotas API REST ──',
-    '// No servidor.js:',
-    'app.get("/api/items", (req,res) => {',
-    '  res.json({ items: [] });',
-    '});',
-    'app.post("/api/items", (req,res) => {',
-    '  // salvar item',
-    '  res.json({ ok: true });',
-    '});',
-    '✓ Teste com: curl http://localhost:9999/api/items'
-  ],
-  db: [
-    '── Banco SQLite ──',
-    '$ npm install better-sqlite3',
-    '// No servidor.js:',
-    'const Database = require("better-sqlite3");',
-    'const db = new Database("dados.db");',
-    'db.exec("CREATE TABLE IF NOT EXISTS itens (id INTEGER PRIMARY KEY, nome TEXT)");',
-    '✓ Banco salvo em /app/dados.db',
-    '✓ Persiste entre deploys com volume'
-  ],
-  css: [
-    '── CSS Moderno ──',
-    '// No index.html adicione no <head>:',
-    '<link rel="preconnect" href="https://fonts.googleapis.com">',
-    '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">',
-    '// No <style>:',
-    'body { font-family: Inter, sans-serif; max-width: 900px; margin: 0 auto; padding: 2rem; }',
-    '✓ Layout responsivo com max-width',
-    '✓ Fonte moderna Inter'
-  ],
-  ws: [
-    '── WebSocket ──',
-    '$ npm install ws',
-    '// No servidor.js:',
-    'const WebSocket = require("ws");',
-    'const wss = new WebSocket.Server({ port: 8080 });',
-    'wss.on("connection", (ws) => {',
-    '  ws.on("message", (msg) => {',
-    '    wss.clients.forEach(c => c.send(msg));',
-    '  });',
-    '});',
-    '✓ Chat em tempo real pronto!'
-  ],
-  env: [
-    '── Variáveis de Ambiente ──',
-    '// No Coolify: Configuration > Environment Variables',
-    '// Adicione: MINHA_CHAVE=valor123',
-    '// No servidor.js:',
-    'const chave = process.env.MINHA_CHAVE;',
-    '✓ Nunca coloque senhas no código!',
-    '✓ Use sempre process.env.NOME'
-  ],
-  upload: [
-    '── Upload de Arquivos ──',
-    '$ npm install multer',
-    '// No servidor.js:',
-    'const multer = require("multer");',
-    'const upload = multer({ dest: "/app/uploads/" });',
-    'app.post("/upload", upload.single("arquivo"), (req,res) => {',
-    '  res.json({ ok: true, nome: req.file.filename });',
-    '});',
-    '✓ Arquivos salvos em /app/uploads/'
-  ],
-  log: [
-    '── Logs do Servidor ──',
-    '// No servidor.js adicione no topo:',
-    'const fs = require("fs");',
-    'function log(msg) {',
-    '  const linha = new Date().toISOString() + " " + msg;',
-    '  console.log(linha);',
-    '  fs.appendFileSync("/app/servidor.log", linha + "\\n");',
-    '}',
-    '// Use: log("Requisição recebida: " + req.url);',
-    '✓ Veja logs no Coolify > Logs'
-  ]
+  auth:['── Login de usuário ──','$ npm install express-session bcrypt','// Rota POST /login no servidor.js','✓ Senha criptografada com bcrypt','✓ Sessão mantida com express-session'],
+  api:['── API REST ──','// GET /api/items → lista itens','// POST /api/items → cria item','// DELETE /api/items/:id → remove','✓ Teste: curl http://localhost:9999/api/items'],
+  db:['── Banco SQLite ──','$ npm install better-sqlite3','const db = new Database("/app/dados.db");','db.exec("CREATE TABLE IF NOT EXISTS itens (id INTEGER PRIMARY KEY, nome TEXT)");','✓ Dados persistem entre deploys'],
+  css:['── CSS Moderno ──','// Adicione no <head>:','<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">','body { font-family: Inter, sans-serif; max-width: 900px; margin: 0 auto; }','✓ Layout responsivo pronto'],
+  ws:['── WebSocket ──','$ npm install ws','const wss = new WebSocket.Server({ port: 8080 });','wss.on("connection", ws => { ws.on("message", msg => wss.clients.forEach(c => c.send(msg))); });','✓ Chat em tempo real!'],
+  env:['── Variáveis de Ambiente ──','// No Coolify: Configuration > Environment Variables','// Adicione: MINHA_CHAVE=valor123','const chave = process.env.MINHA_CHAVE;','✓ Nunca coloque senhas no código!'],
+  upload:['── Upload de Arquivos ──','$ npm install multer','const upload = multer({ dest: "/app/uploads/" });','app.post("/upload", upload.single("arquivo"), (req,res) => { res.json({ ok: true }); });','✓ Arquivos salvos em /app/uploads/'],
+  log:['── Logs ──','fs.appendFileSync("/app/servidor.log", new Date().toISOString() + " " + msg + "\\n");','// Veja logs no Coolify > Logs','✓ Histórico salvo em servidor.log'],
+  dominio:['── Publicar com Domínio ──','1. Compre um domínio (Namecheap, GoDaddy, etc)','2. Aponte o DNS para o IP: 177.7.34.15','3. No Coolify: Configuration > Domains','4. Adicione o domínio e clique Save','✓ HTTPS automático pelo Coolify!']
 };
 
-function mostrar(key) {
-  const t = document.getElementById('terminal');
-  const linhas = dicas[key];
-  linhas.forEach((l, i) => {
-    const d = document.createElement('div');
-    d.textContent = l;
-    d.className = l.startsWith('──') ? 't-muted' : l.startsWith('$') || l.startsWith('//') ? 't-cmd' : l.startsWith('✓') ? 't-ok' : 't-ok';
-    t.appendChild(d);
-  });
-  t.appendChild(Object.assign(document.createElement('div'), {className:'t-muted', textContent:'─────────────'}));
-  t.scrollTop = t.scrollHeight;
+function dica(key) {
+  dicas[key].forEach(l => addLog(l, l.startsWith('──') ? 't-muted' : l.startsWith('$') || l.startsWith('//') || l.startsWith('const') || /^\d/.test(l) ? 't-cmd' : l.startsWith('✓') ? 't-ok' : 't-ok'));
+  addLog('─────────────────', 't-muted');
 }
 
-function selectFile(el, name) {
-  document.querySelectorAll('.file-item').forEach(e => e.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('activeFile').textContent = name;
-  addLog('$ carregando ' + name, 't-muted');
-  fetch('/arquivo?nome=' + name).then(r => r.text()).then(txt => {
-    document.getElementById('editor').value = txt;
-    addLog('✓ ' + name + ' carregado', 't-ok');
-  }).catch(() => {
-    document.getElementById('editor').value = '// Arquivo não encontrado';
-    addLog('✗ Erro ao carregar ' + name, 't-err');
-  });
-}
-
-function addLog(msg, cls) {
+function addLog(msg, cls='t-muted') {
   const t = document.getElementById('terminal');
   const d = document.createElement('div');
-  d.className = cls;
-  d.textContent = msg;
-  t.appendChild(d);
-  t.scrollTop = t.scrollHeight;
+  d.className = cls; d.textContent = msg;
+  t.appendChild(d); t.scrollTop = t.scrollHeight;
+}
+
+function selectFile(el, nome) {
+  document.querySelectorAll('.file-item').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('statusFile').textContent = nome;
+  addLog('$ carregando ' + nome, 't-muted');
+  const url = abaAtiva === '__painel__' ? '/arquivo?nome=' + nome : '/projetos/arquivo?projeto=' + abaAtiva + '&arquivo=' + nome;
+  fetch(url).then(r => r.text()).then(txt => {
+    document.getElementById('editor').value = txt;
+    addLog('✓ ' + nome + ' carregado', 't-ok');
+  }).catch(() => addLog('✗ Erro ao carregar ' + nome, 't-err'));
+}
+
+function selectAba(el, projeto) {
+  document.querySelectorAll('.aba').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  abaAtiva = projeto;
+  document.getElementById('statusFile').textContent = projeto;
+  atualizarSidebar(projeto);
+}
+
+function atualizarSidebar(projeto) {
+  const sb = document.getElementById('sidebar');
+  if (projeto === '__painel__') {
+    sb.innerHTML = '<div class="sidebar-label">Arquivos</div>' +
+      ['index.html','painel.html','servidor.js','Dockerfile'].map(f =>
+        `<div class="file-item" onclick="selectFile(this,'${f}')"><div class="fdot" style="background:${f.endsWith('.html')?'#E24B4A':f.endsWith('.js')?'#EF9F27':'#378ADD'}"></div>${f}</div>`
+      ).join('');
+  } else {
+    const p = projetos[projeto];
+    if (!p) return;
+    const tipos = { site:['index.html','README.md'], api:['index.js','README.md'], python:['main.py','README.md'], cpp:['main.cpp','README.md'], java:['Main.java','README.md'], landing:['index.html','README.md'] };
+    const arquivos = tipos[p.tipo] || ['index.html'];
+    sb.innerHTML = `<div class="sidebar-label">${projeto}</div>` +
+      arquivos.map(f =>
+        `<div class="file-item" onclick="selectFile(this,'${f}')"><div class="fdot" style="background:${f.endsWith('.html')?'#E24B4A':f.endsWith('.js')||f.endsWith('.py')?'#EF9F27':f.endsWith('.cpp')||f.endsWith('.java')?'#378ADD':'#5DCAA5'}"></div>${f}</div>`
+      ).join('') +
+      `<div style="padding:8px 12px;margin-top:8px"><button onclick="verProjeto('${projeto}')" style="width:100%;padding:5px;background:#1D9E75;border:none;border-radius:4px;color:#fff;font-size:11px;cursor:pointer;font-family:sans-serif">🌐 Visualizar</button></div>`;
+  }
+}
+
+function verProjeto(nome) {
+  window.open('/projetos/ver/' + nome, '_blank');
+}
+
+function abrirModal() {
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('nomeProj').focus();
+}
+
+function fecharModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+function selTipo(el) {
+  document.querySelectorAll('.tipo-btn').forEach(e => e.classList.remove('sel'));
+  el.classList.add('sel');
+  tipoSel = el.dataset.tipo;
+}
+
+function criarProjeto() {
+  const nome = document.getElementById('nomeProj').value.trim().replace(/[^a-z0-9-_]/gi, '-').toLowerCase();
+  if (!nome) { addLog('✗ Digite um nome para o projeto', 't-err'); return; }
+  addLog('$ Criando projeto "' + nome + '" (' + tipoSel + ')...', 't-muted');
+  fetch('/projetos/criar', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ nome, tipo: tipoSel })
+  }).then(r => r.json()).then(data => {
+    if (data.ok) {
+      projetos[nome] = { nome, tipo: tipoSel };
+      addAba(nome, tipoSel);
+      addLog('✓ Projeto "' + nome + '" criado!', 't-ok');
+      fecharModal();
+      document.getElementById('nomeProj').value = '';
+    } else {
+      addLog('✗ ' + data.mensagem, 't-err');
+    }
+  }).catch(e => addLog('✗ Erro: ' + e.message, 't-err'));
+}
+
+function addAba(nome, tipo) {
+  const cores = { site:'#E24B4A', api:'#EF9F27', python:'#5DCAA5', cpp:'#378ADD', java:'#EF9F27', landing:'#D4537E' };
+  const icones = { site:'🌐', api:'⚡', python:'🐍', cpp:'⚙', java:'☕', landing:'🚀' };
+  const abas = document.getElementById('abas');
+  const aba = document.createElement('div');
+  aba.className = 'aba';
+  aba.dataset.projeto = nome;
+  aba.innerHTML = `<div class="aba-dot" style="background:${cores[tipo]||'#5DCAA5'}"></div>${icones[tipo]||'📁'} ${nome}<span class="aba-close" onclick="fecharAba(event,'${nome}')">×</span>`;
+  aba.onclick = function(e) { if (!e.target.classList.contains('aba-close')) selectAba(this, nome); };
+  abas.appendChild(aba);
+  selectAba(aba, nome);
+}
+
+function fecharAba(e, nome) {
+  e.stopPropagation();
+  const aba = document.querySelector(`.aba[data-projeto="${nome}"]`);
+  if (aba) aba.remove();
+  delete projetos[nome];
+  selectAba(document.querySelector('.aba'), '__painel__');
+  addLog('✓ Aba "' + nome + '" fechada', 't-muted');
 }
 
 function publicar() {
   const btn = document.getElementById('publishBtn');
-  btn.disabled = true;
-  btn.textContent = 'Publicando...';
-  addLog('$ publicando site...', 't-muted');
+  btn.disabled = true; btn.textContent = 'Publicando...';
+  addLog('$ publicando...', 't-muted');
   fetch('/publicar').then(r => r.text()).then(txt => {
     addLog('✓ ' + txt, 't-ok');
-    btn.textContent = '⬆ Publicar Site';
-    btn.disabled = false;
+    btn.textContent = '⬆ Publicar'; btn.disabled = false;
   }).catch(e => {
-    addLog('✗ Erro: ' + e.message, 't-err');
-    btn.textContent = '⬆ Publicar Site';
-    btn.disabled = false;
+    addLog('✗ ' + e.message, 't-err');
+    btn.textContent = '⬆ Publicar'; btn.disabled = false;
   });
 }
+
+fetch('/projetos/listar').then(r => r.json()).then(lista => {
+  lista.forEach(p => { projetos[p.nome] = p; addAba(p.nome, p.tipo); });
+}).catch(()=>{});
 </script>
 </body>
 </html>
