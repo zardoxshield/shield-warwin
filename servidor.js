@@ -3,6 +3,29 @@ const fs = require('fs');
 const https = require('https');
 const url = require('url');
 const path = require('path');
+
+// === AUTH_SISTEMA_V1 ===
+const crypto = require('crypto');
+const AUTH_FILE = path.join(__dirname, '.auth.json');
+function carregarAuth(){ try { return JSON.parse(fs.readFileSync(AUTH_FILE,'utf8')); } catch(e) { return {usuario:'admin',senhaHash:'',sessoes:{}}; } }
+function salvarAuth(a){ fs.writeFileSync(AUTH_FILE, JSON.stringify(a,null,2)); }
+function hashSenha(s){ return crypto.createHash('sha256').update(s).digest('hex'); }
+function novoToken(){ return crypto.randomBytes(32).toString('hex'); }
+function pegarCookie(req, nome){
+  const c = req.headers.cookie || '';
+  const m = c.match(new RegExp('(?:^|; )' + nome + '=([^;]+)'));
+  return m ? decodeURIComponent(m[1]) : null;
+}
+function autenticado(req){
+  const tok = pegarCookie(req, 'sw_session');
+  if (!tok) return false;
+  const auth = carregarAuth();
+  const sess = auth.sessoes[tok];
+  if (!sess) return false;
+  if (Date.now() > sess.expira) { delete auth.sessoes[tok]; salvarAuth(auth); return false; }
+  return true;
+}
+// === FIM AUTH_SISTEMA_V1 ===
 const { exec, spawn } = require('child_process');
 const sessions = new Map(); // sessionId -> { proc, output, status }
 
@@ -47,6 +70,47 @@ http.createServer((req, res) => {
   const p = url.parse(req.url, true);
   const pathname = p.pathname;
   res.setHeader('Access-Control-Allow-Origin','*');
+
+  // --- LOGIN MIDDLEWARE ---
+  if (pathname === '/api/login') {
+    let body='';
+    req.on('data', d => body += d);
+    req.on('end', () => {
+      try {
+        const { usuario, senha } = JSON.parse(body);
+        const auth = carregarAuth();
+        if (usuario !== auth.usuario || hashSenha(senha) !== auth.senhaHash) {
+          res.writeHead(401, {'Content-Type':'application/json'});
+          return res.end(JSON.stringify({ok:false, erro:'Usuario ou senha incorretos'}));
+        }
+        const tok = novoToken();
+        auth.sessoes[tok] = { usuario, expira: Date.now() + 7*24*60*60*1000 };
+        Object.keys(auth.sessoes).forEach(k => { if(Date.now() > auth.sessoes[k].expira) delete auth.sessoes[k]; });
+        salvarAuth(auth);
+        res.writeHead(200, {
+          'Content-Type':'application/json',
+          'Set-Cookie': 'sw_session='+tok+'; Path=/; Max-Age='+(7*24*60*60)+'; HttpOnly; SameSite=Lax'
+        });
+        res.end(JSON.stringify({ok:true}));
+      } catch(e) { res.writeHead(400); res.end(JSON.stringify({ok:false,erro:e.message})); }
+    });
+    return;
+  }
+  if (pathname === '/api/logout') {
+    const tok = pegarCookie(req, 'sw_session');
+    if (tok) { const a = carregarAuth(); delete a.sessoes[tok]; salvarAuth(a); }
+    res.writeHead(302, {'Location':'/login', 'Set-Cookie':'sw_session=; Path=/; Max-Age=0'});
+    return res.end();
+  }
+  if (pathname === '/login' || pathname === '/login.html') {
+    res.writeHead(200, {'Content-Type':'text/html; charset=utf-8'});
+    return res.end(fs.readFileSync(path.join(__dirname,'login.html'),'utf8'));
+  }
+  if (!autenticado(req)) {
+    res.writeHead(302, {'Location':'/login'});
+    return res.end();
+  }
+  // --- FIM LOGIN MIDDLEWARE ---
 
   if (pathname === '/publicar') {
     const options = {hostname:'coolify.shieldblock.online',path:'/api/v1/deploy?uuid=svlzmst3gkddwpuugkul2076&force=false',method:'GET',headers:{'Authorization':'Bearer 1|QsoABJKcWGckBy038ob7AJayZpO9eF5NYRoKjhak8340ec05'}};
