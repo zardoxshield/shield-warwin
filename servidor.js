@@ -9,6 +9,6 @@ http.createServer((req, res) => {
     });
   } else {
     res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-    res.end(fs.readFileSync('/config/workspace/shield-warwin/painel.html'));
+    res.end(fs.readFileSync('/app/painel.html'));
   }
 }).listen(9999, () => console.log('Painel rodando na porta 9999'));
