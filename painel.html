@@ -2,27 +2,221 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Painel Shield Warwin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shield Warwin IDE</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:sans-serif;background:#0f0f0f;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:2rem}
-h1{font-size:2rem;color:#c9a84c}
-.btn{padding:1.2rem 3rem;font-size:1.2rem;background:#c9a84c;color:#000;border:none;border-radius:8px;cursor:pointer;font-weight:bold;transition:all 0.3s}
-.btn:hover{background:#e6c46a;transform:scale(1.05)}
-.status{font-size:1rem;opacity:0.7;min-height:2rem}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Courier New',monospace;background:#0f0f0f;color:#e0e0e0;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#1a1a1a;border-bottom:1px solid #2a2a2a}
+.logo{font-size:16px;font-weight:bold;color:#5DCAA5}
+.publish-btn{padding:8px 20px;background:#1D9E75;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:bold}
+.publish-btn:hover{background:#0F6E56}
+.publish-btn:disabled{opacity:0.5;cursor:not-allowed}
+.main{display:flex;flex:1;min-height:0}
+.sidebar{width:180px;background:#141414;border-right:1px solid #2a2a2a;padding:10px 0;overflow-y:auto;flex-shrink:0}
+.sidebar-label{font-size:10px;color:#666;padding:6px 12px;text-transform:uppercase;letter-spacing:0.1em}
+.file-item{display:flex;align-items:center;gap:8px;padding:6px 12px;font-size:12px;color:#999;cursor:pointer}
+.file-item:hover,.file-item.active{background:#1e1e1e;color:#e0e0e0}
+.dot{width:7px;height:7px;border-radius:50%}
+.center{flex:1;display:flex;flex-direction:column;min-width:0}
+.editor{flex:1;padding:16px;background:#1a1a1a;font-size:13px;line-height:1.7;overflow-y:auto;outline:none;white-space:pre;color:#c9d1d9;min-height:0;resize:none;border:none;font-family:'Courier New',monospace}
+.terminal{height:140px;background:#0d0d0d;padding:10px 16px;font-size:12px;color:#5DCAA5;overflow-y:auto;border-top:1px solid #2a2a2a;flex-shrink:0}
+.t-err{color:#F09595}.t-ok{color:#5DCAA5}.t-muted{color:#555}.t-cmd{color:#EF9F27}
+.ai-panel{width:240px;background:#141414;border-left:1px solid #2a2a2a;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.ai-header{font-size:11px;color:#666;padding:10px 12px;border-bottom:1px solid #2a2a2a;font-family:sans-serif;text-transform:uppercase;letter-spacing:0.08em;position:sticky;top:0;background:#141414}
+.suggestions{padding:8px;display:flex;flex-direction:column;gap:5px}
+.sug{font-family:sans-serif;font-size:11px;text-align:left;padding:8px 10px;border-radius:5px;border:1px solid #2a2a2a;background:#1a1a1a;color:#ccc;cursor:pointer;line-height:1.4;width:100%}
+.sug:hover{border-color:#5DCAA5;color:#fff}
+.sug-cat{font-size:9px;color:#5DCAA5;display:block;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.08em}
+.statusbar{display:flex;align-items:center;gap:16px;padding:4px 16px;background:#1a1a1a;border-top:1px solid #2a2a2a;font-size:10px;color:#555;font-family:sans-serif;flex-shrink:0}
+.sdot{width:6px;height:6px;border-radius:50%;background:#1D9E75;display:inline-block;margin-right:4px}
 </style>
 </head>
 <body>
-<h1>🚀 Shield Warwin</h1>
-<p style="opacity:0.6">Painel de Publicação</p>
-<button class="btn" onclick="publicar()">📤 Publicar Site</button>
-<p class="status" id="status">Pronto para publicar!</p>
+<div class="topbar">
+  <span class="logo">🚀 Shield Warwin IDE</span>
+  <button class="publish-btn" id="publishBtn" onclick="publicar()">⬆ Publicar Site</button>
+</div>
+<div class="main">
+  <div class="sidebar">
+    <div class="sidebar-label">Arquivos</div>
+    <div class="file-item active" onclick="selectFile(this,'index.html')"><div class="dot" style="background:#E24B4A"></div>index.html</div>
+    <div class="file-item" onclick="selectFile(this,'painel.html')"><div class="dot" style="background:#E24B4A"></div>painel.html</div>
+    <div class="file-item" onclick="selectFile(this,'servidor.js')"><div class="dot" style="background:#EF9F27"></div>servidor.js</div>
+    <div class="file-item" onclick="selectFile(this,'Dockerfile')"><div class="dot" style="background:#378ADD"></div>Dockerfile</div>
+  </div>
+  <div class="center">
+    <textarea class="editor" id="editor" spellcheck="false">// Selecione um arquivo à esquerda para editar</textarea>
+    <div class="terminal" id="terminal">
+      <div class="t-muted">$ Shield Warwin IDE iniciado</div>
+      <div class="t-ok">✓ Servidor online · porta 9999</div>
+      <div class="t-muted">$ aguardando comandos...</div>
+    </div>
+  </div>
+  <div class="ai-panel">
+    <div class="ai-header">✦ Próximos passos</div>
+    <div class="suggestions">
+
+      <button class="sug" onclick="mostrar('auth')"><span class="sug-cat">Segurança</span>Adicionar login de usuário</button>
+      <button class="sug" onclick="mostrar('api')"><span class="sug-cat">Backend</span>Criar rotas API REST</button>
+      <button class="sug" onclick="mostrar('db')"><span class="sug-cat">Banco de dados</span>Conectar banco SQLite</button>
+      <button class="sug" onclick="mostrar('css')"><span class="sug-cat">Frontend</span>Melhorar CSS do site</button>
+      <button class="sug" onclick="mostrar('ws')"><span class="sug-cat">Tempo real</span>Adicionar WebSocket</button>
+      <button class="sug" onclick="mostrar('env')"><span class="sug-cat">Deploy</span>Variáveis de ambiente</button>
+      <button class="sug" onclick="mostrar('upload')"><span class="sug-cat">Funcionalidade</span>Upload de arquivos</button>
+      <button class="sug" onclick="mostrar('log')"><span class="sug-cat">Monitoramento</span>Adicionar logs</button>
+
+    </div>
+  </div>
+</div>
+<div class="statusbar">
+  <span><span class="sdot"></span>Online</span>
+  <span id="activeFile">index.html</span>
+  <span>Node.js v18 · Docker · Coolify</span>
+</div>
+
 <script>
-async function publicar() {
-  document.getElementById('status').textContent = '⏳ Publicando...';
-  const res = await fetch('/publicar');
-  const txt = await res.text();
-  document.getElementById('status').textContent = txt.includes('sucesso') ? '✅ Publicado com sucesso!' : '❌ Erro: ' + txt;
+const dicas = {
+  auth: [
+    '── Login de usuário ──',
+    '$ npm install express-session bcrypt',
+    '// No servidor.js adicione:',
+    'const session = require("express-session");',
+    'const bcrypt = require("bcrypt");',
+    '// Rota de login:',
+    'app.post("/login", (req,res) => { ... })',
+    '✓ Guarda senha com bcrypt.hash()',
+    '✓ Usa session para manter login'
+  ],
+  api: [
+    '── Rotas API REST ──',
+    '// No servidor.js:',
+    'app.get("/api/items", (req,res) => {',
+    '  res.json({ items: [] });',
+    '});',
+    'app.post("/api/items", (req,res) => {',
+    '  // salvar item',
+    '  res.json({ ok: true });',
+    '});',
+    '✓ Teste com: curl http://localhost:9999/api/items'
+  ],
+  db: [
+    '── Banco SQLite ──',
+    '$ npm install better-sqlite3',
+    '// No servidor.js:',
+    'const Database = require("better-sqlite3");',
+    'const db = new Database("dados.db");',
+    'db.exec("CREATE TABLE IF NOT EXISTS itens (id INTEGER PRIMARY KEY, nome TEXT)");',
+    '✓ Banco salvo em /app/dados.db',
+    '✓ Persiste entre deploys com volume'
+  ],
+  css: [
+    '── CSS Moderno ──',
+    '// No index.html adicione no <head>:',
+    '<link rel="preconnect" href="https://fonts.googleapis.com">',
+    '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">',
+    '// No <style>:',
+    'body { font-family: Inter, sans-serif; max-width: 900px; margin: 0 auto; padding: 2rem; }',
+    '✓ Layout responsivo com max-width',
+    '✓ Fonte moderna Inter'
+  ],
+  ws: [
+    '── WebSocket ──',
+    '$ npm install ws',
+    '// No servidor.js:',
+    'const WebSocket = require("ws");',
+    'const wss = new WebSocket.Server({ port: 8080 });',
+    'wss.on("connection", (ws) => {',
+    '  ws.on("message", (msg) => {',
+    '    wss.clients.forEach(c => c.send(msg));',
+    '  });',
+    '});',
+    '✓ Chat em tempo real pronto!'
+  ],
+  env: [
+    '── Variáveis de Ambiente ──',
+    '// No Coolify: Configuration > Environment Variables',
+    '// Adicione: MINHA_CHAVE=valor123',
+    '// No servidor.js:',
+    'const chave = process.env.MINHA_CHAVE;',
+    '✓ Nunca coloque senhas no código!',
+    '✓ Use sempre process.env.NOME'
+  ],
+  upload: [
+    '── Upload de Arquivos ──',
+    '$ npm install multer',
+    '// No servidor.js:',
+    'const multer = require("multer");',
+    'const upload = multer({ dest: "/app/uploads/" });',
+    'app.post("/upload", upload.single("arquivo"), (req,res) => {',
+    '  res.json({ ok: true, nome: req.file.filename });',
+    '});',
+    '✓ Arquivos salvos em /app/uploads/'
+  ],
+  log: [
+    '── Logs do Servidor ──',
+    '// No servidor.js adicione no topo:',
+    'const fs = require("fs");',
+    'function log(msg) {',
+    '  const linha = new Date().toISOString() + " " + msg;',
+    '  console.log(linha);',
+    '  fs.appendFileSync("/app/servidor.log", linha + "\\n");',
+    '}',
+    '// Use: log("Requisição recebida: " + req.url);',
+    '✓ Veja logs no Coolify > Logs'
+  ]
+};
+
+function mostrar(key) {
+  const t = document.getElementById('terminal');
+  const linhas = dicas[key];
+  linhas.forEach((l, i) => {
+    const d = document.createElement('div');
+    d.textContent = l;
+    d.className = l.startsWith('──') ? 't-muted' : l.startsWith('$') || l.startsWith('//') ? 't-cmd' : l.startsWith('✓') ? 't-ok' : 't-ok';
+    t.appendChild(d);
+  });
+  t.appendChild(Object.assign(document.createElement('div'), {className:'t-muted', textContent:'─────────────'}));
+  t.scrollTop = t.scrollHeight;
+}
+
+function selectFile(el, name) {
+  document.querySelectorAll('.file-item').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('activeFile').textContent = name;
+  addLog('$ carregando ' + name, 't-muted');
+  fetch('/arquivo?nome=' + name).then(r => r.text()).then(txt => {
+    document.getElementById('editor').value = txt;
+    addLog('✓ ' + name + ' carregado', 't-ok');
+  }).catch(() => {
+    document.getElementById('editor').value = '// Arquivo não encontrado';
+    addLog('✗ Erro ao carregar ' + name, 't-err');
+  });
+}
+
+function addLog(msg, cls) {
+  const t = document.getElementById('terminal');
+  const d = document.createElement('div');
+  d.className = cls;
+  d.textContent = msg;
+  t.appendChild(d);
+  t.scrollTop = t.scrollHeight;
+}
+
+function publicar() {
+  const btn = document.getElementById('publishBtn');
+  btn.disabled = true;
+  btn.textContent = 'Publicando...';
+  addLog('$ publicando site...', 't-muted');
+  fetch('/publicar').then(r => r.text()).then(txt => {
+    addLog('✓ ' + txt, 't-ok');
+    btn.textContent = '⬆ Publicar Site';
+    btn.disabled = false;
+  }).catch(e => {
+    addLog('✗ Erro: ' + e.message, 't-err');
+    btn.textContent = '⬆ Publicar Site';
+    btn.disabled = false;
+  });
 }
 </script>
 </body>
