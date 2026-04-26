@@ -4,7 +4,7 @@ const { exec } = require('child_process');
 
 http.createServer((req, res) => {
   if (req.url === '/publicar') {
-    exec('cd /config/workspace/shield-warwin && git add . && git commit -m "atualização - $(date)" && git push', (err, stdout, stderr) => {
+    exec('cd /app && git add . && git commit -m "atualização - $(date)" && git push', (err, stdout, stderr) => {
       res.end(err ? '❌ Erro: ' + stderr : '✅ Site publicado com sucesso!');
     });
   } else {
